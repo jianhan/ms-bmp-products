@@ -8,6 +8,7 @@ import (
 
 	cfgreader "github.com/jianhan/pkg/configs"
 	"github.com/micro/go-micro"
+	_ "github.com/spf13/viper/remote"
 )
 
 func main() {
@@ -25,6 +26,9 @@ func main() {
 		micro.Version(serviceConfigs.Version),
 		micro.Metadata(serviceConfigs.Metadata),
 	)
+
+	// TODO: Added dynamic configs so do not have to rebuild service when configs changed
+	// init service
 	srv.Init()
 	if err := srv.Run(); err != nil {
 		log.Fatal(err)
@@ -32,6 +36,7 @@ func main() {
 }
 
 func init() {
+	// set default env if there is not one
 	if os.Getenv("environment") == "" {
 		os.Setenv("environment", "development")
 	}

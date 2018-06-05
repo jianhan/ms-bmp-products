@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package go.micro.srv.products;
+option go_package="products";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+service SuppliersService {
+    rpc AddSupplier (AddSupplierReq) returns (AddSupplierRsp);
+}
+
+message AddSupplierReq {
+    string name = 1;
+}
+
+message AddSupplierRsp {
+    Supplier supplier = 1;
+}
+
+message Supplier {
+    string ID = 1;
+    string name = 2;
+    int64 display_order = 3;
+}
