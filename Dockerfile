@@ -1,3 +1,4 @@
+ENV environment development
 # products-service/Dockerfile
 
 # We use the official golang image, which contains all the
@@ -11,14 +12,8 @@ WORKDIR /go/src/github.com/jianhan/ms-bmp-products
 # Copy the current code into our workdir
 COPY . .
 
-# Here we're pulling in godep, which is a dependency manager tool,
-# we're going to use dep instead of go get, to get around a few
-# quirks in how go get works with sub-packages.
-# RUN go get -u github.com/golang/dep/cmd/dep
-
-# Create a dep project, and run `ensure`, which will pull in all
-# of the dependencies within this directory.
-# RUN dep init && dep ensure
+# dependencies
+RUN go get ./...
 
 # Build the binary, with a few flags which will allow
 # us to run this binary in Alpine.
