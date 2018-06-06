@@ -8,8 +8,8 @@ It is generated from these files:
 	proto/supplier/supplier.proto
 
 It has these top-level messages:
-	AddSupplierReq
-	AddSupplierRsp
+	UpsertSuppliersReq
+	UpsertSuppliersRsp
 	Supplier
 */
 package products
@@ -17,8 +17,6 @@ package products
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import _ "github.com/golang/protobuf/ptypes/timestamp"
-import _ "github.com/golang/protobuf/ptypes/empty"
 
 import (
 	client "github.com/micro/go-micro/client"
@@ -45,7 +43,7 @@ var _ server.Option
 // Client API for SuppliersService service
 
 type SuppliersServiceClient interface {
-	AddSupplier(ctx context.Context, in *AddSupplierReq, opts ...client.CallOption) (*AddSupplierRsp, error)
+	UpsertSuppliers(ctx context.Context, in *UpsertSuppliersReq, opts ...client.CallOption) (*UpsertSuppliersRsp, error)
 }
 
 type suppliersServiceClient struct {
@@ -66,9 +64,9 @@ func NewSuppliersServiceClient(serviceName string, c client.Client) SuppliersSer
 	}
 }
 
-func (c *suppliersServiceClient) AddSupplier(ctx context.Context, in *AddSupplierReq, opts ...client.CallOption) (*AddSupplierRsp, error) {
-	req := c.c.NewRequest(c.serviceName, "SuppliersService.AddSupplier", in)
-	out := new(AddSupplierRsp)
+func (c *suppliersServiceClient) UpsertSuppliers(ctx context.Context, in *UpsertSuppliersReq, opts ...client.CallOption) (*UpsertSuppliersRsp, error) {
+	req := c.c.NewRequest(c.serviceName, "SuppliersService.UpsertSuppliers", in)
+	out := new(UpsertSuppliersRsp)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -79,7 +77,7 @@ func (c *suppliersServiceClient) AddSupplier(ctx context.Context, in *AddSupplie
 // Server API for SuppliersService service
 
 type SuppliersServiceHandler interface {
-	AddSupplier(context.Context, *AddSupplierReq, *AddSupplierRsp) error
+	UpsertSuppliers(context.Context, *UpsertSuppliersReq, *UpsertSuppliersRsp) error
 }
 
 func RegisterSuppliersServiceHandler(s server.Server, hdlr SuppliersServiceHandler, opts ...server.HandlerOption) {
@@ -90,6 +88,6 @@ type SuppliersService struct {
 	SuppliersServiceHandler
 }
 
-func (h *SuppliersService) AddSupplier(ctx context.Context, in *AddSupplierReq, out *AddSupplierRsp) error {
-	return h.SuppliersServiceHandler.AddSupplier(ctx, in, out)
+func (h *SuppliersService) UpsertSuppliers(ctx context.Context, in *UpsertSuppliersReq, out *UpsertSuppliersRsp) error {
+	return h.SuppliersServiceHandler.UpsertSuppliers(ctx, in, out)
 }
