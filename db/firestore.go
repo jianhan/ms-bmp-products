@@ -4,7 +4,10 @@ import (
 	"context"
 	"fmt"
 
+	"strings"
+
 	"cloud.google.com/go/firestore"
+	"github.com/asaskevich/govalidator"
 	"github.com/fatih/structs"
 	"github.com/jianhan/ms-bmp-products/firebase"
 	psuppliers "github.com/jianhan/ms-bmp-products/proto/supplier"
@@ -88,6 +91,36 @@ func (f *firestoreDB) getAll(ctx context.Context) (suppliers []*psuppliers.Suppl
 	return
 }
 
-func validateSuppliers(suppliers []*psuppliers.Supplier) error {
+func checkEmptyTrimmed(fieldName, str, id string) (string, error) {
+	trimmed := strings.Trim(str, " ")
+	if trimmed == "" {
+		return "", fmt.Errorf("%s can not be empty for supplier %s", fieldName, id)
+	}
+	return trimmed, nil
+}
+
+func validateSuppliers(suppliers []*psuppliers.Supplier) (err error) {
+	for _, v := range suppliers {
+		// UUID checking
+		if v.ID != "" && !govalidator.IsUUID(v.ID) {
+			return fmt.Errorf("invalid UUID %s", v.ID)
+		}
+
+		// name checking
+		if v.Name, err = checkEmptyTrimmed("name", v.Name, v.ID); err != nil {
+			return err
+		}
+
+		// home page url checking
+		if v.HomePageUrl, err = checkEmptyTrimmed("homepage url", v.HomePageUrl, v.ID); err != nil {
+			return err
+		}
+
+		// currency checking
+		if v.Currency, err = checkEmptyTrimmed("currency", v.Currency, v.ID); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
