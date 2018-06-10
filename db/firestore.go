@@ -28,6 +28,11 @@ func NewFirestoreDB(ctx context.Context) Database {
 }
 
 func (f *firestoreDB) UpsertSuppliers(ctx context.Context, suppliers []*psuppliers.Supplier) error {
+	// validation
+	if err := validateSuppliers(suppliers); err != nil {
+		return err
+	}
+
 	// get all first
 	existingSuppliers, err := f.getAll(ctx)
 	if err != nil {
@@ -114,6 +119,9 @@ func validateSuppliers(suppliers []*psuppliers.Supplier) (err error) {
 		// home page url checking
 		if v.HomePageUrl, err = checkEmptyTrimmed("homepage url", v.HomePageUrl, v.ID); err != nil {
 			return err
+		}
+		if !govalidator.IsURL(v.HomePageUrl) {
+			return fmt.Errorf("invalid url %s for supplier %s", v.HomePageUrl, v.ID)
 		}
 
 		// currency checking
