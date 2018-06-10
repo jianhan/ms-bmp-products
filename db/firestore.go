@@ -11,17 +11,17 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type fireBase struct {
+type firestoreDB struct {
 	client *firestore.Client
 }
 
-func NewFirebaseDB(ctx context.Context) Database {
-	return &fireBase{
+func NewFirestoreDB(ctx context.Context) Database {
+	return &firestoreDB{
 		client: firebase.NewFirestoreClient(ctx),
 	}
 }
 
-func (f *fireBase) UpsertSuppliers(ctx context.Context, suppliers []*psuppliers.Supplier) error {
+func (f *firestoreDB) UpsertSuppliers(ctx context.Context, suppliers []*psuppliers.Supplier) error {
 	// setup batch
 	batch := f.client.Batch()
 	for _, s := range suppliers {

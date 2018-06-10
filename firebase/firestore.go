@@ -19,8 +19,8 @@ var (
 
 func NewFirestoreClient(ctx context.Context) *firestore.Client {
 	once.Do(func() {
-		opt := option.WithCredentialsFile("./admin_sdk.json")
-		app, err := firebase.NewApp(context.Background(), nil, opt)
+		opt := option.WithCredentialsFile("./db/admin_sdk.json")
+		app, err := firebase.NewApp(ctx, nil, opt)
 		if err != nil {
 			logrus.Fatal(err)
 			panic(fmt.Errorf("can not initialize new firebase app : %v\n", err))

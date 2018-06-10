@@ -6,6 +6,11 @@ import (
 	"os"
 	"time"
 
+	"context"
+
+	"github.com/jianhan/ms-bmp-products/db"
+	"github.com/jianhan/ms-bmp-products/handlers"
+	psuppliers "github.com/jianhan/ms-bmp-products/proto/supplier"
 	cfgreader "github.com/jianhan/pkg/configs"
 	"github.com/micro/go-micro"
 	_ "github.com/spf13/viper/remote"
@@ -30,6 +35,10 @@ func main() {
 	// TODO: Added dynamic configs so do not have to rebuild service when configs changed
 	// init service
 	srv.Init()
+	psuppliers.RegisterSuppliersServiceHandler(
+		srv.Server(),
+		handlers.NewSuppliersHandler(db.NewFirestoreDB(context.Background())),
+	)
 	if err := srv.Run(); err != nil {
 		log.Fatal(err)
 	}
