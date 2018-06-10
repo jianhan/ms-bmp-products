@@ -2,10 +2,9 @@ package db
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	"cloud.google.com/go/firestore"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/fatih/structs"
 	"github.com/jianhan/ms-bmp-products/firebase"
 	psuppliers "github.com/jianhan/ms-bmp-products/proto/supplier"
@@ -31,13 +30,30 @@ func (f *firestoreDB) UpsertSuppliers(ctx context.Context, suppliers []*psupplie
 	if err != nil {
 		return err
 	}
-	spew.Dump(existingSuppliers)
+
 	// setup batch
 	batch := f.client.Batch()
 	for _, s := range suppliers {
 		for _, e := range existingSuppliers {
+			// start validation for unique constraints
 			if e.Name == s.Name && s.ID == "" {
-				return errors.New("duplicate name")
+				// duplication for inserting, checking name
+				return fmt.Errorf("error trying to insert new supplier %v with duplicate name %s", s, s.Name)
+			}
+
+			if s.ID != "" && s.ID != e.ID && e.Name == s.Name {
+				// duplication for updating, checking name
+				return fmt.Errorf("error trying to update supplier %v with duplicate name %s", s, s.Name)
+			}
+
+			if e.HomePageUrl == s.HomePageUrl && s.ID == "" {
+				// duplication for inserting, checking homepage url
+				return fmt.Errorf("error trying to insert new supplier %v with duplicate homepage url %s", s, s.HomePageUrl)
+			}
+
+			if s.ID != "" && s.ID != e.ID && e.HomePageUrl == s.HomePageUrl {
+				// duplication for updating, checking name
+				return fmt.Errorf("error trying to update supplier %v with duplicate homepage url %s", s, s.HomePageUrl)
 			}
 		}
 		// auto fill IDs
