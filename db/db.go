@@ -7,5 +7,5 @@ import (
 )
 
 type Database interface {
-	UpsertSuppliers(ctx context.Context, suppliers []psuppliers.Supplier) error
+	UpsertSuppliers(ctx context.Context, suppliers []*psuppliers.Supplier) error
 }

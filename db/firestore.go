@@ -21,7 +21,7 @@ func NewFirebaseDB(ctx context.Context) Database {
 	}
 }
 
-func (f *fireBase) UpsertSuppliers(ctx context.Context, suppliers []psuppliers.Supplier) error {
+func (f *fireBase) UpsertSuppliers(ctx context.Context, suppliers []*psuppliers.Supplier) error {
 	// setup batch
 	batch := f.client.Batch()
 	for _, s := range suppliers {
