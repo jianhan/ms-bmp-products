@@ -20,9 +20,13 @@ message UpsertSuppliersRsp {
 }
 
 message Supplier {
+    // @inject_tag: valid:"required~Supplier ID is required, uuidv4~supplier ID must be a valid UUIDv4"
     string ID = 1;
+    // @inject_tag: valid:"required~Supplier name is required"
     string name = 2;
+    // @inject_tag: valid:"url~Supplier logo must be a valid URL"
     string logo_url = 3;
+    // @inject_tag: valid:"required, url~Supplier home page must be a valid URL"
     string home_page_url = 4;
     string currency = 5;
     int64 display_order = 6;
