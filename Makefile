@@ -12,7 +12,7 @@ all: test build pb injectpb lint
 
 build:
 	GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(BINARY_NAME) .
-	docker build -t $(DIR_NAME) .
+#	docker build -t $(DIR_NAME) .
 
 test:
 	$(GOTEST) -v ./...

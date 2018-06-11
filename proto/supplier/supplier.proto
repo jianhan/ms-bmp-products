@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package go.micro.srv.products;
 option go_package="products";
+import "google/protobuf/timestamp.proto";
+
 
 service SuppliersService {
     rpc UpsertSuppliers (UpsertSuppliersReq) returns (UpsertSuppliersRsp);
@@ -22,4 +24,6 @@ message Supplier {
     string home_page_url = 4;
     string currency = 5;
     int64 display_order = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
 }
