@@ -64,15 +64,16 @@ func (m *UpsertSuppliersRsp) GetSuppliers() []*Supplier {
 }
 
 type Supplier struct {
-	// @inject_tag: valid:"required~Supplier ID is required, uuidv4~supplier ID must be a valid UUIDv4"
-	ID string `protobuf:"bytes,1,opt,name=ID" json:"ID,omitempty" valid:"required~Supplier ID is required, uuidv4~supplier ID must be a valid UUIDv4"`
-	// @inject_tag: valid:"required~Supplier name is required"
-	Name string `protobuf:"bytes,2,opt,name=name" json:"name,omitempty" valid:"required~Supplier name is required"`
-	// @inject_tag: valid:"url~Supplier logo must be a valid URL"
-	LogoUrl string `protobuf:"bytes,3,opt,name=logo_url,json=logoUrl" json:"logo_url,omitempty" valid:"url~Supplier logo must be a valid URL"`
-	// @inject_tag: valid:"required, url~Supplier home page must be a valid URL"
-	HomePageUrl  string                             `protobuf:"bytes,4,opt,name=home_page_url,json=homePageUrl" json:"home_page_url,omitempty" valid:"required, url~Supplier home page must be a valid URL"`
-	Currency     string                             `protobuf:"bytes,5,opt,name=currency" json:"currency,omitempty"`
+	// @inject_tag: valid:"uuidv4~supplier ID must be a valid UUIDv4" conform:"trim"
+	ID string `protobuf:"bytes,1,opt,name=ID" json:"ID,omitempty" valid:"uuidv4~supplier ID must be a valid UUIDv4" conform:"trim"`
+	// @inject_tag: valid:"required~Supplier name is required" conform:"trim"
+	Name string `protobuf:"bytes,2,opt,name=name" json:"name,omitempty" valid:"required~Supplier name is required" conform:"trim"`
+	// @inject_tag: valid:"url~Supplier logo must be a valid URL" conform:"trim"
+	LogoUrl string `protobuf:"bytes,3,opt,name=logo_url,json=logoUrl" json:"logo_url,omitempty" valid:"url~Supplier logo must be a valid URL" conform:"trim"`
+	// @inject_tag: valid:"required, url~Supplier home page must be a valid URL" conform:"trim"
+	HomePageUrl string `protobuf:"bytes,4,opt,name=home_page_url,json=homePageUrl" json:"home_page_url,omitempty" valid:"required, url~Supplier home page must be a valid URL" conform:"trim"`
+	// @inject_tag: conform:"trim"
+	Currency     string                             `protobuf:"bytes,5,opt,name=currency" json:"currency,omitempty" conform:"trim"`
 	DisplayOrder int64                              `protobuf:"varint,6,opt,name=display_order,json=displayOrder" json:"display_order,omitempty"`
 	Timestamp    *go_micro_srv_pkg_common.Timestamp `protobuf:"bytes,7,opt,name=timestamp" json:"timestamp,omitempty"`
 }

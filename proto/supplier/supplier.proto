@@ -20,14 +20,15 @@ message UpsertSuppliersRsp {
 }
 
 message Supplier {
-    // @inject_tag: valid:"required~Supplier ID is required, uuidv4~supplier ID must be a valid UUIDv4"
+    // @inject_tag: valid:"uuidv4~supplier ID must be a valid UUIDv4" conform:"trim"
     string ID = 1;
-    // @inject_tag: valid:"required~Supplier name is required"
+    // @inject_tag: valid:"required~Supplier name is required" conform:"trim"
     string name = 2;
-    // @inject_tag: valid:"url~Supplier logo must be a valid URL"
+    // @inject_tag: valid:"url~Supplier logo must be a valid URL" conform:"trim"
     string logo_url = 3;
-    // @inject_tag: valid:"required, url~Supplier home page must be a valid URL"
+    // @inject_tag: valid:"required, url~Supplier home page must be a valid URL" conform:"trim"
     string home_page_url = 4;
+    // @inject_tag: conform:"trim"
     string currency = 5;
     int64 display_order = 6;
     go.micro.srv.pkg.common.Timestamp timestamp = 7;
