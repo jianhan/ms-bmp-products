@@ -8,7 +8,6 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/asaskevich/govalidator"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/fatih/structs"
 	"github.com/jianhan/ms-bmp-products/firebase"
 	psuppliers "github.com/jianhan/ms-bmp-products/proto/supplier"
@@ -72,7 +71,6 @@ func (f *firestoreDB) UpsertSuppliers(ctx context.Context, suppliers []*psupplie
 		for _, s := range suppliers {
 			if s.ID == "" || s.CreatedAt == 0 {
 				s.CreatedAt = now.Unix()
-				spew.Dump(now.Unix())
 				s.ID = uuid.Must(uuid.NewV4()).String()
 			}
 			s.UpdatedAt = now.Unix()
@@ -81,8 +79,7 @@ func (f *firestoreDB) UpsertSuppliers(ctx context.Context, suppliers []*psupplie
 	}
 
 	// Commit the batch.
-	results, err := batch.Commit(ctx)
-	spew.Dump(results)
+	_, err = batch.Commit(ctx)
 	if err != nil {
 		logrus.Errorf("error occur while batch set suppliers @UpsertSuppliers: %s", err.Error())
 		return err
