@@ -9,6 +9,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"github.com/asaskevich/govalidator"
 	"github.com/fatih/structs"
+	"github.com/gosimple/slug"
 	"github.com/jianhan/ms-bmp-products/firebase"
 	psuppliers "github.com/jianhan/ms-bmp-products/proto/supplier"
 	"github.com/leebenson/conform"
@@ -54,6 +55,16 @@ func (f *firestoreDB) UpsertSuppliers(ctx context.Context, suppliers []*psupplie
 			if s.ID != "" && s.ID != e.ID && e.Name == s.Name {
 				// duplication for updating, checking name
 				return fmt.Errorf("error trying to update supplier %v with duplicate name %s", s, s.Name)
+			}
+
+			if e.Slug == s.Slug && s.ID == "" {
+				// duplication for inserting, checking slug
+				return fmt.Errorf("error trying to insert new supplier %v with duplicate slug %s", s, s.Slug)
+			}
+
+			if s.ID != "" && s.ID != e.ID && e.Slug == s.Slug {
+				// duplication for updating, checking slug
+				return fmt.Errorf("error trying to update supplier %v with duplicate slug %s", s, s.Slug)
 			}
 
 			if e.HomePageUrl == s.HomePageUrl && s.ID == "" {
@@ -107,6 +118,10 @@ func validateSuppliers(suppliers []*psuppliers.Supplier) (err error) {
 		// UUID checking
 		if v.ID != "" && !govalidator.IsUUID(v.ID) {
 			return fmt.Errorf("invalid UUID %s", v.ID)
+		}
+
+		if v.Slug == "" {
+			v.Slug = slug.Make(v.Name)
 		}
 		_, err := govalidator.ValidateStruct(v)
 		if err != nil {
