@@ -4,8 +4,11 @@ import (
 	"context"
 	"fmt"
 
+	"time"
+
 	"cloud.google.com/go/firestore"
 	"github.com/asaskevich/govalidator"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/fatih/structs"
 	"github.com/jianhan/ms-bmp-products/firebase"
 	psuppliers "github.com/jianhan/ms-bmp-products/proto/supplier"
@@ -40,8 +43,8 @@ func (f *firestoreDB) UpsertSuppliers(ctx context.Context, suppliers []*psupplie
 
 	// setup batch
 	batch := f.client.Batch()
+	now := time.Now()
 	for _, s := range suppliers {
-
 		for _, e := range existingSuppliers {
 			// start validation for unique constraints
 			if e.Name == s.Name && s.ID == "" {
@@ -67,15 +70,19 @@ func (f *firestoreDB) UpsertSuppliers(ctx context.Context, suppliers []*psupplie
 
 		// auto fill IDs
 		for _, s := range suppliers {
-			if s.ID == "" {
+			if s.ID == "" || s.CreatedAt == 0 {
+				s.CreatedAt = now.Unix()
+				spew.Dump(now.Unix())
 				s.ID = uuid.Must(uuid.NewV4()).String()
 			}
+			s.UpdatedAt = now.Unix()
 		}
 		batch.Set(f.client.Collection(f.path).Doc(s.ID), structs.Map(s), firestore.MergeAll)
 	}
 
 	// Commit the batch.
-	_, err = batch.Commit(ctx)
+	results, err := batch.Commit(ctx)
+	spew.Dump(results)
 	if err != nil {
 		logrus.Errorf("error occur while batch set suppliers @UpsertSuppliers: %s", err.Error())
 		return err
