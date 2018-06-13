@@ -136,8 +136,13 @@ func validateSuppliers(suppliers []*psuppliers.Supplier) (err error) {
 }
 
 func (f *firestoreDB) UpsertProducts(ctx context.Context, products []*pproducts.Product) error {
+	// validation
+	if err := validateProducts(products); err != nil {
+		return err
+	}
+
 	// get all first
-	existingSuppliers, err := f.getAllProducts(ctx)
+	existingProducts, err := f.getAllProducts(ctx)
 	if err != nil {
 		return err
 	}
@@ -145,55 +150,55 @@ func (f *firestoreDB) UpsertProducts(ctx context.Context, products []*pproducts.
 	// setup batch
 	batch := f.client.Batch()
 	now := time.Now()
-	for _, s := range suppliers {
-		for _, e := range existingSuppliers {
+	for _, p := range products {
+		for _, e := range existingProducts {
 			// start validation for unique constraints
-			if e.Name == s.Name && s.ID == "" {
+			if e.Name == p.Name && p.ID == "" {
 				// duplication for inserting, checking name
-				return fmt.Errorf("error trying to insert new supplier %v with duplicate name %s", s, s.Name)
+				return fmt.Errorf("error trying to insert new product %v with duplicate name %s", p, p.Name)
 			}
 
-			if s.ID != "" && s.ID != e.ID && e.Name == s.Name {
+			if p.ID != "" && p.ID != e.ID && e.Name == p.Name {
 				// duplication for updating, checking name
-				return fmt.Errorf("error trying to update supplier %v with duplicate name %s", s, s.Name)
+				return fmt.Errorf("error trying to update product %v with duplicate name %s", p, p.Name)
 			}
 
-			if e.Slug == s.Slug && s.ID == "" {
+			if e.Slug == p.Slug && p.ID == "" {
 				// duplication for inserting, checking slug
-				return fmt.Errorf("error trying to insert new supplier %v with duplicate slug %s", s, s.Slug)
+				return fmt.Errorf("error trying to insert new product %v with duplicate slug %s", p, p.Slug)
 			}
 
-			if s.ID != "" && s.ID != e.ID && e.Slug == s.Slug {
+			if p.ID != "" && p.ID != e.ID && e.Slug == p.Slug {
 				// duplication for updating, checking slug
-				return fmt.Errorf("error trying to update supplier %v with duplicate slug %s", s, s.Slug)
+				return fmt.Errorf("error trying to update product %v with duplicate slug %s", p, p.Slug)
 			}
 
-			if e.HomePageUrl == s.HomePageUrl && s.ID == "" {
-				// duplication for inserting, checking homepage url
-				return fmt.Errorf("error trying to insert new supplier %v with duplicate homepage url %s", s, s.HomePageUrl)
+			if e.Url == p.Url && p.ID == "" {
+				// duplication for inserting, checking  url
+				return fmt.Errorf("error trying to insert new product %v with duplicate homepage url %s", p, p.Url)
 			}
 
-			if s.ID != "" && s.ID != e.ID && e.HomePageUrl == s.HomePageUrl {
+			if p.ID != "" && p.ID != e.ID && e.Url == p.Url {
 				// duplication for updating, checking name
-				return fmt.Errorf("error trying to update supplier %v with duplicate homepage url %s", s, s.HomePageUrl)
+				return fmt.Errorf("error trying to update product %v with duplicate homepage url %s", p, p.Url)
 			}
 		}
 
 		// auto fill IDs
-		for _, s := range suppliers {
-			if s.ID == "" || s.CreatedAt == 0 {
-				s.CreatedAt = now.Unix()
-				s.ID = uuid.Must(uuid.NewV4()).String()
+		for _, p := range products {
+			if p.ID == "" || p.CreatedAt == 0 {
+				p.CreatedAt = now.Unix()
+				p.ID = uuid.Must(uuid.NewV4()).String()
 			}
-			s.UpdatedAt = now.Unix()
+			p.UpdatedAt = now.Unix()
 		}
-		batch.Set(f.client.Collection(f.categoriesPath).Doc(s.ID), structs.Map(s), firestore.MergeAll)
+		batch.Set(f.client.Collection(f.productsPath).Doc(p.ID), structs.Map(p), firestore.MergeAll)
 	}
 
 	// Commit the batch.
 	_, err = batch.Commit(ctx)
 	if err != nil {
-		logrus.Errorf("error occur while batch set suppliers @UpsertSuppliers: %s", err.Error())
+		logrus.Errorf("error occur while batch set products: %s", err.Error())
 		return err
 	}
 
@@ -211,6 +216,26 @@ func (f *firestoreDB) getAllProducts(ctx context.Context) (products []*pproducts
 	}
 
 	return
+}
+
+func validateProducts(products []*pproducts.Product) (err error) {
+	for _, v := range products {
+		conform.Strings(v)
+		// UUID checking
+		if v.ID != "" && !govalidator.IsUUID(v.ID) {
+			return fmt.Errorf("invalid UUID %s", v.ID)
+		}
+
+		if v.Slug == "" {
+			v.Slug = slug.Make(v.Name)
+		}
+		_, err := govalidator.ValidateStruct(v)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (f *firestoreDB) Close() error {
