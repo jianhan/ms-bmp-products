@@ -131,3 +131,7 @@ func validateSuppliers(suppliers []*psuppliers.Supplier) (err error) {
 
 	return nil
 }
+
+func (f *firestoreDB) Close() error {
+	f.client.Close()
+}

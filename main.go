@@ -35,9 +35,13 @@ func main() {
 	// TODO: Added dynamic configs so do not have to rebuild service when configs changed
 	// init service
 	srv.Init()
+
+	// init firestore and defer close it
+	firestoreClient := db.NewFirestoreDB(context.Background())
+	defer firestoreClient.Close()
 	psuppliers.RegisterSuppliersServiceHandler(
 		srv.Server(),
-		handlers.NewSuppliersHandler(db.NewFirestoreDB(context.Background())),
+		handlers.NewSuppliersHandler(firestoreClient),
 	)
 	if err := srv.Run(); err != nil {
 		log.Fatal(err)
