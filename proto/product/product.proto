@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package go.micro.srv.products;
+option go_package="products";
+
+service ProductsService {
+    rpc UpsertProducts (UpsertProductsReq) returns (UpsertProductsRsp);
+}
+
+message UpsertProductsReq {
+    repeated Product products = 1;
+}
+
+message UpsertProductsRsp {
+    repeated Product products = 1;
+}
+
+message Product {
+    // @inject_tag: valid:"uuidv4~Product ID must be a valid UUIDv4" conform:"trim"
+    string ID = 1;
+    // @inject_tag: valid:"required~Product name is required" conform:"trim"
+    string name = 2;
+    // @inject_tag: valid:"required~Product slug is required" conform:"trim,slug"
+    string slug = 3;
+    // @inject_tag: valid:"required~Product price is required"
+    float price = 4;
+    // @inject_tag: valid:"required~Product currency is required"
+    string currency = 5;
+    // @inject_tag: valid:"url~Product image must be a valid URL format"
+    string image_url = 6;
+    // @inject_tag: valid:"required~Product category url is required,url~Product category url must be a valid URL format"
+    string category_url = 7;
+    // @inject_tag: valid:"url~Product url must be a valid URL format"
+    string url = 8;
+    float rating = 9;
+    string brand = 10;
+    // @inject_tag: valid:"required~Product created at is required"
+    int64 created_at  = 11;
+    // @inject_tag: valid:"required~Product updated at at is required"
+    int64 updated_at = 12;
+}
