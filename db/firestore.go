@@ -147,6 +147,8 @@ func (f *firestoreDB) UpsertProducts(ctx context.Context, products []*pproducts.
 		return err
 	}
 
+	// TODO: validate category urls
+
 	// setup batch
 	batch := f.client.Batch()
 	now := time.Now()
@@ -239,5 +241,5 @@ func validateProducts(products []*pproducts.Product) (err error) {
 }
 
 func (f *firestoreDB) Close() error {
-	f.client.Close()
+	return f.client.Close()
 }

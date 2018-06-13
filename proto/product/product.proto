@@ -34,8 +34,6 @@ message Product {
     string url = 8;
     float rating = 9;
     string brand = 10;
-    // @inject_tag: valid:"required~Product created at is required"
     int64 created_at  = 11;
-    // @inject_tag: valid:"required~Product updated at at is required"
     int64 updated_at = 12;
 }

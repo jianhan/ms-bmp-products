@@ -77,13 +77,11 @@ type Product struct {
 	// @inject_tag: valid:"required~Product category url is required,url~Product category url must be a valid URL format"
 	CategoryUrl string `protobuf:"bytes,7,opt,name=category_url,json=categoryUrl" json:"category_url,omitempty" valid:"required~Product category url is required,url~Product category url must be a valid URL format"`
 	// @inject_tag: valid:"url~Product url must be a valid URL format"
-	Url    string  `protobuf:"bytes,8,opt,name=url" json:"url,omitempty" valid:"url~Product url must be a valid URL format"`
-	Rating float32 `protobuf:"fixed32,9,opt,name=rating" json:"rating,omitempty"`
-	Brand  string  `protobuf:"bytes,10,opt,name=brand" json:"brand,omitempty"`
-	// @inject_tag: valid:"required~Product created at is required"
-	CreatedAt int64 `protobuf:"varint,11,opt,name=created_at,json=createdAt" json:"created_at,omitempty" valid:"required~Product created at is required"`
-	// @inject_tag: valid:"required~Product updated at at is required"
-	UpdatedAt int64 `protobuf:"varint,12,opt,name=updated_at,json=updatedAt" json:"updated_at,omitempty" valid:"required~Product updated at at is required"`
+	Url       string  `protobuf:"bytes,8,opt,name=url" json:"url,omitempty" valid:"url~Product url must be a valid URL format"`
+	Rating    float32 `protobuf:"fixed32,9,opt,name=rating" json:"rating,omitempty"`
+	Brand     string  `protobuf:"bytes,10,opt,name=brand" json:"brand,omitempty"`
+	CreatedAt int64   `protobuf:"varint,11,opt,name=created_at,json=createdAt" json:"created_at,omitempty"`
+	UpdatedAt int64   `protobuf:"varint,12,opt,name=updated_at,json=updatedAt" json:"updated_at,omitempty"`
 }
 
 func (m *Product) Reset()                    { *m = Product{} }

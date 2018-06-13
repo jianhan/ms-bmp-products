@@ -10,6 +10,7 @@ import (
 
 	"github.com/jianhan/ms-bmp-products/db"
 	"github.com/jianhan/ms-bmp-products/handlers"
+	pproducts "github.com/jianhan/ms-bmp-products/proto/product"
 	psuppliers "github.com/jianhan/ms-bmp-products/proto/supplier"
 	cfgreader "github.com/jianhan/pkg/configs"
 	"github.com/micro/go-micro"
@@ -39,10 +40,19 @@ func main() {
 	// init firestore and defer close it
 	firestoreClient := db.NewFirestoreDB(context.Background())
 	defer firestoreClient.Close()
+
+	// register suppliers handler
 	psuppliers.RegisterSuppliersServiceHandler(
 		srv.Server(),
 		handlers.NewSuppliersHandler(firestoreClient),
 	)
+
+	// register products handler
+	pproducts.RegisterProductsServiceHandler(
+		srv.Server(),
+		handlers.NewProductsHandler(firestoreClient),
+	)
+
 	if err := srv.Run(); err != nil {
 		log.Fatal(err)
 	}

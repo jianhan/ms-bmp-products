@@ -75,10 +75,8 @@ type Supplier struct {
 	// @inject_tag: conform:"trim"
 	Currency     string `protobuf:"bytes,6,opt,name=currency" json:"currency,omitempty" conform:"trim"`
 	DisplayOrder int64  `protobuf:"varint,7,opt,name=display_order,json=displayOrder" json:"display_order,omitempty"`
-	// @inject_tag: valid:"required~Supplier created at is required"
-	CreatedAt int64 `protobuf:"varint,8,opt,name=created_at,json=createdAt" json:"created_at,omitempty" valid:"required~Supplier created at is required"`
-	// @inject_tag: valid:"required~Supplier updated at at is required"
-	UpdatedAt int64 `protobuf:"varint,9,opt,name=updated_at,json=updatedAt" json:"updated_at,omitempty" valid:"required~Supplier updated at at is required"`
+	CreatedAt    int64  `protobuf:"varint,8,opt,name=created_at,json=createdAt" json:"created_at,omitempty"`
+	UpdatedAt    int64  `protobuf:"varint,9,opt,name=updated_at,json=updatedAt" json:"updated_at,omitempty"`
 }
 
 func (m *Supplier) Reset()                    { *m = Supplier{} }
