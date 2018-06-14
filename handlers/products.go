@@ -8,10 +8,10 @@ import (
 )
 
 type Products struct {
-	db db.Database
+	db db.Products
 }
 
-func NewProductsHandler(db db.Database) *Products {
+func NewProductsHandler(db db.Products) *Products {
 	return &Products{db: db}
 }
 

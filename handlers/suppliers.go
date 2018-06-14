@@ -8,10 +8,10 @@ import (
 )
 
 type Suppliers struct {
-	db db.Database
+	db db.Suppliers
 }
 
-func NewSuppliersHandler(db db.Database) *Suppliers {
+func NewSuppliersHandler(db db.Suppliers) *Suppliers {
 	return &Suppliers{db: db}
 }
 

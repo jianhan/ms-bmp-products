@@ -1,14 +1,12 @@
 package db
 
-import (
-	"context"
+import "cloud.google.com/go/firestore"
 
-	pproducts "github.com/jianhan/ms-bmp-products/proto/product"
-	psuppliers "github.com/jianhan/ms-bmp-products/proto/supplier"
-)
+type Base struct {
+	client *firestore.Client
+	path   string
+}
 
-type Database interface {
-	UpsertSuppliers(ctx context.Context, suppliers []*psuppliers.Supplier) error
-	UpsertProducts(ctx context.Context, products []*pproducts.Product) error
-	Close() error
+func (b *Base) Close() error {
+	return b.client.Close()
 }

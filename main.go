@@ -9,6 +9,7 @@ import (
 	"context"
 
 	"github.com/jianhan/ms-bmp-products/db"
+	"github.com/jianhan/ms-bmp-products/firebase"
 	"github.com/jianhan/ms-bmp-products/handlers"
 	pproducts "github.com/jianhan/ms-bmp-products/proto/product"
 	psuppliers "github.com/jianhan/ms-bmp-products/proto/supplier"
@@ -38,19 +39,19 @@ func main() {
 	srv.Init()
 
 	// init firestore and defer close it
-	firestoreClient := db.NewFirestoreDB(context.Background())
+	firestoreClient := firebase.NewFirestoreClient(context.Background())
 	defer firestoreClient.Close()
 
 	// register suppliers handler
 	psuppliers.RegisterSuppliersServiceHandler(
 		srv.Server(),
-		handlers.NewSuppliersHandler(firestoreClient),
+		handlers.NewSuppliersHandler(db.NewSuppliers("suppliers", firestoreClient)),
 	)
 
 	// register products handler
 	pproducts.RegisterProductsServiceHandler(
 		srv.Server(),
-		handlers.NewProductsHandler(firestoreClient),
+		handlers.NewProductsHandler(db.NewProducts("products", firestoreClient)),
 	)
 
 	if err := srv.Run(); err != nil {
