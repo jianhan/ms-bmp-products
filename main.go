@@ -11,6 +11,7 @@ import (
 	"github.com/jianhan/ms-bmp-products/db"
 	"github.com/jianhan/ms-bmp-products/firebase"
 	"github.com/jianhan/ms-bmp-products/handlers"
+	pcategories "github.com/jianhan/ms-bmp-products/proto/categories"
 	pproducts "github.com/jianhan/ms-bmp-products/proto/products"
 	psuppliers "github.com/jianhan/ms-bmp-products/proto/suppliers"
 	cfgreader "github.com/jianhan/pkg/configs"
@@ -52,6 +53,12 @@ func main() {
 	pproducts.RegisterProductsServiceHandler(
 		srv.Server(),
 		handlers.NewProductsHandler(db.NewProducts("products", firestoreClient)),
+	)
+
+	// register categories handler
+	pcategories.RegisterCategoriesServiceHandler(
+		srv.Server(),
+		handlers.NewCategoriesHandler(db.NewCategories("categories", firestoreClient)),
 	)
 
 	if err := srv.Run(); err != nil {
