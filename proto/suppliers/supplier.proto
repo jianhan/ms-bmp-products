@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package go.micro.srv.products;
-option go_package="products";
+option go_package="suppliers";
 
 service SuppliersService {
     rpc UpsertSuppliers (UpsertSuppliersReq) returns (UpsertSuppliersRsp);
