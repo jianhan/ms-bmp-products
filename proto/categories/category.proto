@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package go.micro.srv.products;
+option go_package="categories";
+
+service CategoriesService {
+    rpc UpsertCategories (UpsertCategoriesReq) returns (UpsertCategoriesRsp);
+}
+
+message UpsertCategoriesReq {
+    repeated Category categories = 1;
+}
+
+message UpsertCategoriesRsp {
+    repeated Category categories = 1;
+}
+
+message Category {
+    // @inject_tag: valid:"uuidv4~Category ID must be a valid UUIDv4" conform:"trim"
+    string ID = 1;
+    // @inject_tag: valid:"required~Category name is required" conform:"trim"
+    string name = 2;
+    // @inject_tag: valid:"required~Category slug is required" conform:"trim,slug"
+    string slug = 3;
+    // @inject_tag: valid:"required~Category url is required, url~Category url must be a valid URL" conform:"trim"
+    string url = 4;
+    int64 display_order = 5;
+    int64 created_at  = 6;
+    int64 updated_at = 7;
+}
