@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/jianhan/ms-bmp-products/db"
-	pproducts "github.com/jianhan/ms-bmp-products/proto/product"
+	pproducts "github.com/jianhan/ms-bmp-products/proto/products"
 )
 
 type Products struct {

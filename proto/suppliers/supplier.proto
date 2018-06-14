@@ -16,7 +16,7 @@ message UpsertSuppliersRsp {
 }
 
 message Supplier {
-    // @inject_tag: valid:"uuidv4~supplier ID must be a valid UUIDv4" conform:"trim"
+    // @inject_tag: valid:"uuidv4~suppliers ID must be a valid UUIDv4" conform:"trim"
     string ID = 1;
     // @inject_tag: valid:"required~Supplier name is required" conform:"trim"
     string name = 2;

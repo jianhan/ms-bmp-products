@@ -9,7 +9,7 @@ import (
 	"github.com/asaskevich/govalidator"
 	"github.com/fatih/structs"
 	"github.com/gosimple/slug"
-	psuppliers "github.com/jianhan/ms-bmp-products/proto/supplier"
+	psuppliers "github.com/jianhan/ms-bmp-products/proto/suppliers"
 	"github.com/leebenson/conform"
 	"github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
@@ -52,32 +52,32 @@ func (d *suppliers) UpsertSuppliers(ctx context.Context, suppliers []*psuppliers
 			// start validation for unique constraints
 			if e.Name == s.Name && s.ID == "" {
 				// duplication for inserting, checking name
-				return fmt.Errorf("error trying to insert new supplier %v with duplicate name %s", s, s.Name)
+				return fmt.Errorf("error trying to insert new suppliers %v with duplicate name %s", s, s.Name)
 			}
 
 			if s.ID != "" && s.ID != e.ID && e.Name == s.Name {
 				// duplication for updating, checking name
-				return fmt.Errorf("error trying to update supplier %v with duplicate name %s", s, s.Name)
+				return fmt.Errorf("error trying to update suppliers %v with duplicate name %s", s, s.Name)
 			}
 
 			if e.Slug == s.Slug && s.ID == "" {
 				// duplication for inserting, checking slug
-				return fmt.Errorf("error trying to insert new supplier %v with duplicate slug %s", s, s.Slug)
+				return fmt.Errorf("error trying to insert new suppliers %v with duplicate slug %s", s, s.Slug)
 			}
 
 			if s.ID != "" && s.ID != e.ID && e.Slug == s.Slug {
 				// duplication for updating, checking slug
-				return fmt.Errorf("error trying to update supplier %v with duplicate slug %s", s, s.Slug)
+				return fmt.Errorf("error trying to update suppliers %v with duplicate slug %s", s, s.Slug)
 			}
 
 			if e.HomePageUrl == s.HomePageUrl && s.ID == "" {
 				// duplication for inserting, checking homepage url
-				return fmt.Errorf("error trying to insert new supplier %v with duplicate homepage url %s", s, s.HomePageUrl)
+				return fmt.Errorf("error trying to insert new suppliers %v with duplicate homepage url %s", s, s.HomePageUrl)
 			}
 
 			if s.ID != "" && s.ID != e.ID && e.HomePageUrl == s.HomePageUrl {
 				// duplication for updating, checking name
-				return fmt.Errorf("error trying to update supplier %v with duplicate homepage url %s", s, s.HomePageUrl)
+				return fmt.Errorf("error trying to update suppliers %v with duplicate homepage url %s", s, s.HomePageUrl)
 			}
 		}
 

@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/jianhan/ms-bmp-products/db"
-	psuppliers "github.com/jianhan/ms-bmp-products/proto/supplier"
+	psuppliers "github.com/jianhan/ms-bmp-products/proto/suppliers"
 )
 
 type Suppliers struct {

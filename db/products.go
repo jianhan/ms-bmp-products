@@ -9,7 +9,7 @@ import (
 	"github.com/asaskevich/govalidator"
 	"github.com/fatih/structs"
 	"github.com/gosimple/slug"
-	pproducts "github.com/jianhan/ms-bmp-products/proto/product"
+	pproducts "github.com/jianhan/ms-bmp-products/proto/products"
 	"github.com/leebenson/conform"
 	"github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
@@ -53,32 +53,32 @@ func (d *products) UpsertProducts(ctx context.Context, products []*pproducts.Pro
 			// start validation for unique constraints
 			if e.Name == p.Name && p.ID == "" {
 				// duplication for inserting, checking name
-				return fmt.Errorf("error trying to insert new product %v with duplicate name %s", p, p.Name)
+				return fmt.Errorf("error trying to insert new products %v with duplicate name %s", p, p.Name)
 			}
 
 			if p.ID != "" && p.ID != e.ID && e.Name == p.Name {
 				// duplication for updating, checking name
-				return fmt.Errorf("error trying to update product %v with duplicate name %s", p, p.Name)
+				return fmt.Errorf("error trying to update products %v with duplicate name %s", p, p.Name)
 			}
 
 			if e.Slug == p.Slug && p.ID == "" {
 				// duplication for inserting, checking slug
-				return fmt.Errorf("error trying to insert new product %v with duplicate slug %s", p, p.Slug)
+				return fmt.Errorf("error trying to insert new products %v with duplicate slug %s", p, p.Slug)
 			}
 
 			if p.ID != "" && p.ID != e.ID && e.Slug == p.Slug {
 				// duplication for updating, checking slug
-				return fmt.Errorf("error trying to update product %v with duplicate slug %s", p, p.Slug)
+				return fmt.Errorf("error trying to update products %v with duplicate slug %s", p, p.Slug)
 			}
 
 			if e.Url == p.Url && p.ID == "" {
 				// duplication for inserting, checking  url
-				return fmt.Errorf("error trying to insert new product %v with duplicate homepage url %s", p, p.Url)
+				return fmt.Errorf("error trying to insert new products %v with duplicate homepage url %s", p, p.Url)
 			}
 
 			if p.ID != "" && p.ID != e.ID && e.Url == p.Url {
 				// duplication for updating, checking name
-				return fmt.Errorf("error trying to update product %v with duplicate homepage url %s", p, p.Url)
+				return fmt.Errorf("error trying to update products %v with duplicate homepage url %s", p, p.Url)
 			}
 		}
 
