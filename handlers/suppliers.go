@@ -22,13 +22,18 @@ func NewSuppliersHandler(db db.Suppliers) *Suppliers {
 }
 
 func (s *Suppliers) UpsertSuppliers(ctx context.Context, req *psuppliers.UpsertSuppliersReq, rsp *psuppliers.UpsertSuppliersRsp) error {
+	// bulk upserts
 	if err := s.db.UpsertSuppliers(ctx, req.Suppliers); err != nil {
 		return err
 	}
 
-	//if err := s.publishUpsertSuppliers(ctx); err != nil {
-	//	return err
-	//}
+	// get all suppliers
+	suppliers, err := s.db.GetAllSuppliers(ctx)
+	if err != nil {
+		return err
+	}
+
+	rsp.Suppliers = suppliers
 
 	return nil
 }

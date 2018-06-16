@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -117,6 +118,9 @@ func (d *suppliers) GetAllSuppliers(ctx context.Context) (suppliers []*psupplier
 }
 
 func validateSuppliers(suppliers []*psuppliers.Supplier) (err error) {
+	if len(suppliers) == 0 {
+		return errors.New("empty suppliers")
+	}
 	for _, v := range suppliers {
 		conform.Strings(v)
 		// UUID checking
