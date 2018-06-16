@@ -5,10 +5,16 @@ import (
 
 	"github.com/jianhan/ms-bmp-products/db"
 	psuppliers "github.com/jianhan/ms-bmp-products/proto/suppliers"
+	"github.com/micro/go-micro/broker"
+)
+
+const (
+	TopicSuppliersUpserted = "suppliers.upserted"
 )
 
 type Suppliers struct {
-	db db.Suppliers
+	db     db.Suppliers
+	PubSub broker.Broker
 }
 
 func NewSuppliersHandler(db db.Suppliers) *Suppliers {
@@ -20,5 +26,21 @@ func (s *Suppliers) UpsertSuppliers(ctx context.Context, req *psuppliers.UpsertS
 		return err
 	}
 
+	//if err := s.publishUpsertSuppliers(ctx); err != nil {
+	//	return err
+	//}
+
 	return nil
 }
+
+//func (s *Suppliers) publishUpsertSuppliers(ctx context.Context) error {
+//	suppliers, err := s.db.GetAllSuppliers(ctx)
+//	if err != nil {
+//		return err
+//	}
+//
+//	// Publish message to broker
+//	if err := s.PubSub.Publish(TopicSuppliersUpserted, suppliers).Publish(topicSuppliersUpserted, msg); err != nil {
+//		log.Printf("[pub] failed: %v", err)
+//	}
+//}

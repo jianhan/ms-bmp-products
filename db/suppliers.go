@@ -17,6 +17,7 @@ import (
 
 type Suppliers interface {
 	UpsertSuppliers(ctx context.Context, suppliers []*psuppliers.Supplier) error
+	GetAllSuppliers(ctx context.Context) (suppliers []*psuppliers.Supplier, err error)
 }
 
 type suppliers struct {
@@ -39,7 +40,7 @@ func (d *suppliers) UpsertSuppliers(ctx context.Context, suppliers []*psuppliers
 	}
 
 	// get all first
-	existingSuppliers, err := d.getAllSuppliers(ctx)
+	existingSuppliers, err := d.GetAllSuppliers(ctx)
 	if err != nil {
 		return err
 	}
@@ -102,7 +103,7 @@ func (d *suppliers) UpsertSuppliers(ctx context.Context, suppliers []*psuppliers
 	return nil
 }
 
-func (d *suppliers) getAllSuppliers(ctx context.Context) (suppliers []*psuppliers.Supplier, err error) {
+func (d *suppliers) GetAllSuppliers(ctx context.Context) (suppliers []*psuppliers.Supplier, err error) {
 	t, _ := d.client.Collection(d.path).Documents(ctx).GetAll()
 	for _, v := range t {
 		var s psuppliers.Supplier

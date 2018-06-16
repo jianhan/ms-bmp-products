@@ -20,6 +20,27 @@ import (
 )
 
 func main() {
+	//sc, _ := stan.Connect("test-cluster", "test-client")
+	//
+	//// Simple Async Subscriber
+	//sub, err := sc.Subscribe("bar", func(m *stan.Msg) {
+	//	q.Q("TTTTTTj$", string(m.Data))
+	//	fmt.Printf("Received a message: %s\n", string(m.Data))
+	//})
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+	//
+	//// Simple Synchronous Publisher
+	//sc.Publish("bar", []byte("Hello World")) // does not return until an ack has been received from NATS Streaming
+	//spew.Dump("testtest123123")
+	//
+	//// Unsubscribe
+	//sub.Unsubscribe()
+	//
+	//// Close connection
+	//sc.Close()
+
 	// Optional. Switch the session to a monotonic behavior.
 	serviceConfigs, err := cfgreader.NewReader(os.Getenv("ENVIRONMENT")).Read()
 	if err != nil {
@@ -64,6 +85,7 @@ func main() {
 	if err := srv.Run(); err != nil {
 		log.Fatal(err)
 	}
+
 }
 
 func init() {
