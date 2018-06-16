@@ -1,4 +1,3 @@
-ENV environment development
 # products-service/Dockerfile
 
 # We use the official golang image, which contains all the

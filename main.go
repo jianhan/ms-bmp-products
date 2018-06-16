@@ -21,7 +21,7 @@ import (
 
 func main() {
 	// Optional. Switch the session to a monotonic behavior.
-	serviceConfigs, err := cfgreader.NewReader(os.Getenv("environment")).Read()
+	serviceConfigs, err := cfgreader.NewReader(os.Getenv("ENVIRONMENT")).Read()
 	if err != nil {
 		panic(fmt.Sprintf("error while reading configurations: %s", err.Error()))
 	}
@@ -68,7 +68,7 @@ func main() {
 
 func init() {
 	// set default env if there is not one
-	if os.Getenv("environment") == "" {
-		os.Setenv("environment", "development")
+	if os.Getenv("ENVIRONMENT") == "" {
+		os.Setenv("ENVIRONMENT", "development")
 	}
 }
