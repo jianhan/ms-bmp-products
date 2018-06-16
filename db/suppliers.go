@@ -148,19 +148,3 @@ func validateSuppliers(suppliers []*psuppliers.Supplier) (err error) {
 
 	return nil
 }
-
-func filterIDs(suppliers []*psuppliers.Supplier, existingSuppliers []*psuppliers.Supplier) {
-	for ks := range suppliers {
-		existing := false
-		for ke := range existingSuppliers {
-			if suppliers[ks].ID == existingSuppliers[ke].ID {
-				existing = true
-				break
-			}
-		}
-		if !existing {
-
-		}
-	}
-
-}
