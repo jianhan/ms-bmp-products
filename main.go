@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -91,7 +90,7 @@ func main() {
 	)
 
 	if err := srv.Run(); err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 }
