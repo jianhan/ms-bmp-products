@@ -20,28 +20,6 @@ import (
 )
 
 func main() {
-
-	//// Simple Async Subscriber
-	//sub, err := sc.Subscribe("bar", func(m *stan.Msg) {
-	//	q.Q("TTTTTTj$", string(m.Data))
-	//	fmt.Printf("Received a message: %s\n", string(m.Data))
-	//}k)
-	//if err != nil {
-	//	fmt.Println(err)
-	//}
-	//
-	//// Simple Synchronous Publisher
-	//sc.Publish("bar", []byte("Hello World")) // does not return until an ack has been received from NATS Streaming
-	//spew.Dump("testtest123123")
-	//
-	//// Unsubscribe
-	//sub.Unsubscribe()
-	//
-	//// Close connection
-	//sc.Close()
-
-	// Optional. Switch the session to a monotonic behavior.
-
 	// init nats streaming
 	sc, err := stan.Connect(os.Getenv("NATS_STREAMING_CLUSTER"), os.Getenv("NATS_STREAMING_CLIENT_ID"))
 	if err != nil {
