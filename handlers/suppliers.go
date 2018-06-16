@@ -47,15 +47,3 @@ func (s *Suppliers) UpsertSuppliers(ctx context.Context, req *psuppliers.UpsertS
 
 	return nil
 }
-
-//func (s *Suppliers) publishUpsertSuppliers(ctx context.Context) error {
-//	suppliers, err := s.db.GetAllSuppliers(ctx)
-//	if err != nil {
-//		return err
-//	}
-//
-//	// Publish message to broker
-//	if err := s.PubSub.Publish(TopicSuppliersUpserted, suppliers).Publish(topicSuppliersUpserted, msg); err != nil {
-//		log.Printf("[pub] failed: %v", err)
-//	}
-//}
