@@ -26,7 +26,7 @@ func main() {
 	//sub, err := sc.Subscribe("bar", func(m *stan.Msg) {
 	//	q.Q("TTTTTTj$", string(m.Data))
 	//	fmt.Printf("Received a message: %s\n", string(m.Data))
-	//})
+	//}k)
 	//if err != nil {
 	//	fmt.Println(err)
 	//}

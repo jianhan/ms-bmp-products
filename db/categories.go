@@ -81,14 +81,24 @@ func (d *categories) UpsertCategories(ctx context.Context, categories []*pcatego
 			}
 		}
 
-		// auto fill IDs
+		// auto fill IDs and timestamp
 		for _, s := range categories {
-			if s.ID == "" || s.CreatedAt == 0 {
-				s.CreatedAt = now.Unix()
+			if s.ID == "" {
 				s.ID = uuid.Must(uuid.NewV4()).String()
+			} else {
+				for k := range existingCategories {
+					if existingCategories[k].ID == s.ID {
+						s.CreatedAt = existingCategories[k].CreatedAt
+						break
+					}
+				}
+			}
+			if s.CreatedAt == 0 {
+				s.CreatedAt = now.Unix()
 			}
 			s.UpdatedAt = now.Unix()
 		}
+
 		batch.Set(d.client.Collection(d.path).Doc(s.ID), structs.Map(s), firestore.MergeAll)
 	}
 

@@ -82,13 +82,22 @@ func (d *products) UpsertProducts(ctx context.Context, products []*pproducts.Pro
 			}
 		}
 
-		// auto fill IDs
-		for _, p := range products {
-			if p.ID == "" || p.CreatedAt == 0 {
-				p.CreatedAt = now.Unix()
-				p.ID = uuid.Must(uuid.NewV4()).String()
+		// auto fill IDs and timestamp
+		for _, s := range products {
+			if s.ID == "" {
+				s.ID = uuid.Must(uuid.NewV4()).String()
+			} else {
+				for k := range existingProducts {
+					if existingProducts[k].ID == s.ID {
+						s.CreatedAt = existingProducts[k].CreatedAt
+						break
+					}
+				}
 			}
-			p.UpdatedAt = now.Unix()
+			if s.CreatedAt == 0 {
+				s.CreatedAt = now.Unix()
+			}
+			s.UpdatedAt = now.Unix()
 		}
 		batch.Set(d.client.Collection(d.path).Doc(p.ID), structs.Map(p), firestore.MergeAll)
 	}
