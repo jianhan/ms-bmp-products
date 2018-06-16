@@ -16,12 +16,12 @@ import (
 	psuppliers "github.com/jianhan/ms-bmp-products/proto/suppliers"
 	cfgreader "github.com/jianhan/pkg/configs"
 	"github.com/micro/go-micro"
+	"github.com/nats-io/go-nats-streaming"
 	_ "github.com/spf13/viper/remote"
 )
 
 func main() {
-	//sc, _ := stan.Connect("test-cluster", "test-client")
-	//
+
 	//// Simple Async Subscriber
 	//sub, err := sc.Subscribe("bar", func(m *stan.Msg) {
 	//	q.Q("TTTTTTj$", string(m.Data))
@@ -42,6 +42,14 @@ func main() {
 	//sc.Close()
 
 	// Optional. Switch the session to a monotonic behavior.
+
+	// init nats streaming
+	sc, err := stan.Connect(os.Getenv("NATS_STREAMING_CLUSTER"), os.Getenv("NATS_STREAMING_CLIENT_ID"))
+	if err != nil {
+		panic(err)
+	}
+	defer sc.Close()
+
 	serviceConfigs, err := cfgreader.NewReader(os.Getenv("ENVIRONMENT")).Read()
 	if err != nil {
 		panic(fmt.Sprintf("error while reading configurations: %s", err.Error()))
@@ -67,7 +75,7 @@ func main() {
 	// register suppliers handler
 	psuppliers.RegisterSuppliersServiceHandler(
 		srv.Server(),
-		handlers.NewSuppliersHandler(db.NewSuppliers("suppliers", firestoreClient)),
+		handlers.NewSuppliersHandler(db.NewSuppliers("suppliers", firestoreClient), sc),
 	)
 
 	// register products handler
@@ -92,5 +100,14 @@ func init() {
 	// set default env if there is not one
 	if os.Getenv("ENVIRONMENT") == "" {
 		os.Setenv("ENVIRONMENT", "development")
+	}
+
+	// set default nats configs
+	if os.Getenv("NATS_STREAMING_CLUSTER") == "" {
+		os.Setenv("NATS_STREAMING_CLUSTER", "test-cluster")
+	}
+
+	if os.Getenv("NATS_STREAMING_CLIENT_ID") == "" {
+		os.Setenv("NATS_STREAMING_CLIENT_ID", "test-client")
 	}
 }

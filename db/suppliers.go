@@ -83,11 +83,20 @@ func (d *suppliers) UpsertSuppliers(ctx context.Context, suppliers []*psuppliers
 			}
 		}
 
-		// auto fill IDs
+		// auto fill IDs and timestamp
 		for _, s := range suppliers {
-			if s.ID == "" || s.CreatedAt == 0 {
-				s.CreatedAt = now.Unix()
+			if s.ID == "" {
 				s.ID = uuid.Must(uuid.NewV4()).String()
+			} else {
+				for k := range existingSuppliers {
+					if existingSuppliers[k].ID == s.ID {
+						s.CreatedAt = existingSuppliers[k].CreatedAt
+						break
+					}
+				}
+			}
+			if s.CreatedAt == 0 {
+				s.CreatedAt = now.Unix()
 			}
 			s.UpdatedAt = now.Unix()
 		}
@@ -138,4 +147,20 @@ func validateSuppliers(suppliers []*psuppliers.Supplier) (err error) {
 	}
 
 	return nil
+}
+
+func filterIDs(suppliers []*psuppliers.Supplier, existingSuppliers []*psuppliers.Supplier) {
+	for ks := range suppliers {
+		existing := false
+		for ke := range existingSuppliers {
+			if suppliers[ks].ID == existingSuppliers[ke].ID {
+				existing = true
+				break
+			}
+		}
+		if !existing {
+
+		}
+	}
+
 }
