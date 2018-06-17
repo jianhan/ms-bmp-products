@@ -25,6 +25,7 @@ message Category {
     // @inject_tag: valid:"required~Category url is required, url~Category url must be a valid URL" conform:"trim"
     string url = 4;
     int64 display_order = 5;
-    int64 created_at  = 6;
-    int64 updated_at = 7;
+    bool hidden = 6;
+    int64 created_at  = 7;
+    int64 updated_at = 8;
 }

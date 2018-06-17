@@ -34,6 +34,7 @@ message Product {
     string url = 8;
     float rating = 9;
     string brand = 10;
-    int64 created_at  = 11;
-    int64 updated_at = 12;
+    bool hidden = 11;
+    int64 created_at  = 12;
+    int64 updated_at = 13;
 }
