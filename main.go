@@ -64,7 +64,7 @@ func main() {
 	// register categories handler
 	pcategories.RegisterCategoriesServiceHandler(
 		srv.Server(),
-		handlers.NewCategoriesHandler(db.NewCategories("categories", firestoreClient)),
+		handlers.NewCategoriesHandler(db.NewCategories("categories", firestoreClient), sc),
 	)
 
 	if err := srv.Run(); err != nil {

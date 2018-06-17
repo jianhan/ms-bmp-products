@@ -17,6 +17,7 @@ import (
 
 type Categories interface {
 	UpsertCategories(ctx context.Context, categories []*pcategories.Category) error
+	GetAllCategories(ctx context.Context) (categories []*pcategories.Category, err error)
 }
 
 type categories struct {
@@ -39,7 +40,7 @@ func (d *categories) UpsertCategories(ctx context.Context, categories []*pcatego
 	}
 
 	// get all first
-	existingCategories, err := d.getAllCategories(ctx)
+	existingCategories, err := d.GetAllCategories(ctx)
 	if err != nil {
 		return err
 	}
@@ -112,7 +113,7 @@ func (d *categories) UpsertCategories(ctx context.Context, categories []*pcatego
 	return nil
 }
 
-func (d *categories) getAllCategories(ctx context.Context) (categories []*pcategories.Category, err error) {
+func (d *categories) GetAllCategories(ctx context.Context) (categories []*pcategories.Category, err error) {
 	t, _ := d.client.Collection(d.path).Documents(ctx).GetAll()
 	for _, v := range t {
 		var s pcategories.Category
