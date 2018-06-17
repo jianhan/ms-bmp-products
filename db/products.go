@@ -17,6 +17,7 @@ import (
 
 type Products interface {
 	UpsertProducts(ctx context.Context, products []*pproducts.Product) error
+	GetAllProducts(ctx context.Context) (products []*pproducts.Product, err error)
 }
 
 type products struct {
@@ -38,7 +39,7 @@ func (d *products) UpsertProducts(ctx context.Context, products []*pproducts.Pro
 	}
 
 	// get all first
-	existingProducts, err := d.getAllProducts(ctx)
+	existingProducts, err := d.GetAllProducts(ctx)
 	if err != nil {
 		return err
 	}
@@ -112,7 +113,7 @@ func (d *products) UpsertProducts(ctx context.Context, products []*pproducts.Pro
 	return nil
 }
 
-func (f *products) getAllProducts(ctx context.Context) (products []*pproducts.Product, err error) {
+func (f *products) GetAllProducts(ctx context.Context) (products []*pproducts.Product, err error) {
 	ps, _ := f.client.Collection(f.path).Documents(ctx).GetAll()
 	for _, product := range ps {
 		var p pproducts.Product

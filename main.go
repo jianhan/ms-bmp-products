@@ -58,7 +58,7 @@ func main() {
 	// register products handler
 	pproducts.RegisterProductsServiceHandler(
 		srv.Server(),
-		handlers.NewProductsHandler(db.NewProducts("products", firestoreClient)),
+		handlers.NewProductsHandler(db.NewProducts("products", firestoreClient), sc),
 	)
 
 	// register categories handler

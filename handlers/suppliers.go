@@ -28,12 +28,11 @@ func (s *Suppliers) UpsertSuppliers(ctx context.Context, req *psuppliers.UpsertS
 		return err
 	}
 
-	// get all suppliers
+	// get all suppliers and construct response
 	suppliers, err := s.db.GetAllSuppliers(ctx)
 	if err != nil {
 		return err
 	}
-
 	rsp.Suppliers = suppliers
 
 	// publish message
