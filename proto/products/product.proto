@@ -30,7 +30,7 @@ message Product {
     string image_url = 6;
     // @inject_tag: valid:"required~Product categories url is required,url~Product category url must be a valid URL format"
     string category_url = 7;
-    // @inject_tag: valid:"url~Product url must be a valid URL format"
+    // @inject_tag: valid:"required~Product url is required,url~Product url must be a valid URL format"
     string url = 8;
     float rating = 9;
     string brand = 10;

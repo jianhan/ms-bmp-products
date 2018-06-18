@@ -74,12 +74,12 @@ func (d *products) UpsertProducts(ctx context.Context, products []*pproducts.Pro
 
 			if e.Url == p.Url && p.ID == "" {
 				// duplication for inserting, checking  url
-				return fmt.Errorf("error trying to insert new products %v with duplicate homepage url %s", p, p.Url)
+				return fmt.Errorf("error trying to insert new products %v with duplicate url %s", p, p.Url)
 			}
 
 			if p.ID != "" && p.ID != e.ID && e.Url == p.Url {
 				// duplication for updating, checking name
-				return fmt.Errorf("error trying to update products %v with duplicate homepage url %s", p, p.Url)
+				return fmt.Errorf("error trying to update products %v with duplicate url %s", p, p.Url)
 			}
 		}
 

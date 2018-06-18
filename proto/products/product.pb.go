@@ -76,8 +76,8 @@ type Product struct {
 	ImageUrl string `protobuf:"bytes,6,opt,name=image_url,json=imageUrl" json:"image_url,omitempty" valid:"url~Product image must be a valid URL format"`
 	// @inject_tag: valid:"required~Product categories url is required,url~Product category url must be a valid URL format"
 	CategoryUrl string `protobuf:"bytes,7,opt,name=category_url,json=categoryUrl" json:"category_url,omitempty" valid:"required~Product categories url is required,url~Product category url must be a valid URL format"`
-	// @inject_tag: valid:"url~Product url must be a valid URL format"
-	Url       string  `protobuf:"bytes,8,opt,name=url" json:"url,omitempty" valid:"url~Product url must be a valid URL format"`
+	// @inject_tag: valid:"required~Product url is required,url~Product url must be a valid URL format"
+	Url       string  `protobuf:"bytes,8,opt,name=url" json:"url,omitempty" valid:"required~Product url is required,url~Product url must be a valid URL format"`
 	Rating    float32 `protobuf:"fixed32,9,opt,name=rating" json:"rating,omitempty"`
 	Brand     string  `protobuf:"bytes,10,opt,name=brand" json:"brand,omitempty"`
 	Hidden    bool    `protobuf:"varint,11,opt,name=hidden" json:"hidden,omitempty"`
