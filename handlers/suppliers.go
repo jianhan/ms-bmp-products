@@ -22,14 +22,14 @@ func NewSuppliersHandler(db db.Suppliers, stanConn stan.Conn) *Suppliers {
 	return &Suppliers{db: db, stanConn: stanConn}
 }
 
-func (s *Suppliers) UpsertSuppliers(ctx context.Context, req *psuppliers.UpsertSuppliersReq, rsp *psuppliers.UpsertSuppliersRsp) error {
+func (h *Suppliers) UpsertSuppliers(ctx context.Context, req *psuppliers.UpsertSuppliersReq, rsp *psuppliers.UpsertSuppliersRsp) error {
 	// bulk upserts
-	if err := s.db.UpsertSuppliers(ctx, req.Suppliers); err != nil {
+	if err := h.db.UpsertSuppliers(ctx, req.Suppliers); err != nil {
 		return err
 	}
 
 	// get all suppliers and construct response
-	suppliers, err := s.db.GetAllSuppliers(ctx)
+	suppliers, err := h.db.GetAllSuppliers(ctx)
 	if err != nil {
 		return err
 	}
@@ -40,7 +40,7 @@ func (s *Suppliers) UpsertSuppliers(ctx context.Context, req *psuppliers.UpsertS
 	if err != nil {
 		return err
 	}
-	if err := s.stanConn.Publish(TopicSuppliersUpserted, rspBytes); err != nil {
+	if err := h.stanConn.Publish(TopicSuppliersUpserted, rspBytes); err != nil {
 		return err
 	}
 

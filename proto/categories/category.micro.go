@@ -10,6 +10,8 @@ It is generated from these files:
 It has these top-level messages:
 	UpsertCategoriesReq
 	UpsertCategoriesRsp
+	CategoriesReq
+	CategoriesRsp
 	Category
 */
 package categories
@@ -44,6 +46,7 @@ var _ server.Option
 
 type CategoriesServiceClient interface {
 	UpsertCategories(ctx context.Context, in *UpsertCategoriesReq, opts ...client.CallOption) (*UpsertCategoriesRsp, error)
+	Categories(ctx context.Context, in *CategoriesReq, opts ...client.CallOption) (*CategoriesRsp, error)
 }
 
 type categoriesServiceClient struct {
@@ -74,10 +77,21 @@ func (c *categoriesServiceClient) UpsertCategories(ctx context.Context, in *Upse
 	return out, nil
 }
 
+func (c *categoriesServiceClient) Categories(ctx context.Context, in *CategoriesReq, opts ...client.CallOption) (*CategoriesRsp, error) {
+	req := c.c.NewRequest(c.serviceName, "CategoriesService.Categories", in)
+	out := new(CategoriesRsp)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for CategoriesService service
 
 type CategoriesServiceHandler interface {
 	UpsertCategories(context.Context, *UpsertCategoriesReq, *UpsertCategoriesRsp) error
+	Categories(context.Context, *CategoriesReq, *CategoriesRsp) error
 }
 
 func RegisterCategoriesServiceHandler(s server.Server, hdlr CategoriesServiceHandler, opts ...server.HandlerOption) {
@@ -90,4 +104,8 @@ type CategoriesService struct {
 
 func (h *CategoriesService) UpsertCategories(ctx context.Context, in *UpsertCategoriesReq, out *UpsertCategoriesRsp) error {
 	return h.CategoriesServiceHandler.UpsertCategories(ctx, in, out)
+}
+
+func (h *CategoriesService) Categories(ctx context.Context, in *CategoriesReq, out *CategoriesRsp) error {
+	return h.CategoriesServiceHandler.Categories(ctx, in, out)
 }

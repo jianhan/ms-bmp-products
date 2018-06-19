@@ -5,6 +5,7 @@ option go_package="categories";
 
 service CategoriesService {
     rpc UpsertCategories (UpsertCategoriesReq) returns (UpsertCategoriesRsp);
+    rpc Categories (CategoriesReq) returns (CategoriesRsp);
 }
 
 message UpsertCategoriesReq {
@@ -12,6 +13,14 @@ message UpsertCategoriesReq {
 }
 
 message UpsertCategoriesRsp {
+    repeated Category categories = 1;
+}
+
+message CategoriesReq {
+
+}
+
+message CategoriesRsp {
     repeated Category categories = 1;
 }
 

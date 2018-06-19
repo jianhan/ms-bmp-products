@@ -59,7 +59,7 @@ func (d *categories) UpsertCategories(ctx context.Context, categories []*pcatego
 
 			if s.ID != "" && s.ID != e.ID && e.Name == s.Name {
 				// duplication for updating, checking name
-				return fmt.Errorf("error trying to update categories %v with duplicate name %s", s, s.Name)
+				return fmt.Errorf("error trying to update categories %v with duplicate name %s, already exists %s", s, s.Name, e.ID)
 			}
 
 			if e.Slug == s.Slug && s.ID == "" {
