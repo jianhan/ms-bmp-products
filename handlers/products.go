@@ -45,3 +45,14 @@ func (h *Products) UpsertProducts(ctx context.Context, req *pproducts.UpsertProd
 
 	return nil
 }
+
+func (h *Products) Products(ctx context.Context, req *pproducts.ProductsReq, rsp *pproducts.ProductsRsp) error {
+	// get all products and construct response
+	products, err := h.db.GetAllProducts(ctx)
+	if err != nil {
+		return err
+	}
+	rsp.Products = products
+
+	return nil
+}

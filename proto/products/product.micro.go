@@ -10,6 +10,8 @@ It is generated from these files:
 It has these top-level messages:
 	UpsertProductsReq
 	UpsertProductsRsp
+	ProductsReq
+	ProductsRsp
 	Product
 */
 package products
@@ -44,6 +46,7 @@ var _ server.Option
 
 type ProductsServiceClient interface {
 	UpsertProducts(ctx context.Context, in *UpsertProductsReq, opts ...client.CallOption) (*UpsertProductsRsp, error)
+	Products(ctx context.Context, in *ProductsReq, opts ...client.CallOption) (*ProductsRsp, error)
 }
 
 type productsServiceClient struct {
@@ -74,10 +77,21 @@ func (c *productsServiceClient) UpsertProducts(ctx context.Context, in *UpsertPr
 	return out, nil
 }
 
+func (c *productsServiceClient) Products(ctx context.Context, in *ProductsReq, opts ...client.CallOption) (*ProductsRsp, error) {
+	req := c.c.NewRequest(c.serviceName, "ProductsService.Products", in)
+	out := new(ProductsRsp)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for ProductsService service
 
 type ProductsServiceHandler interface {
 	UpsertProducts(context.Context, *UpsertProductsReq, *UpsertProductsRsp) error
+	Products(context.Context, *ProductsReq, *ProductsRsp) error
 }
 
 func RegisterProductsServiceHandler(s server.Server, hdlr ProductsServiceHandler, opts ...server.HandlerOption) {
@@ -90,4 +104,8 @@ type ProductsService struct {
 
 func (h *ProductsService) UpsertProducts(ctx context.Context, in *UpsertProductsReq, out *UpsertProductsRsp) error {
 	return h.ProductsServiceHandler.UpsertProducts(ctx, in, out)
+}
+
+func (h *ProductsService) Products(ctx context.Context, in *ProductsReq, out *ProductsRsp) error {
+	return h.ProductsServiceHandler.Products(ctx, in, out)
 }

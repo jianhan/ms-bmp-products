@@ -5,6 +5,7 @@ option go_package="products";
 
 service ProductsService {
     rpc UpsertProducts (UpsertProductsReq) returns (UpsertProductsRsp);
+    rpc Products (ProductsReq) returns (ProductsRsp);
 }
 
 message UpsertProductsReq {
@@ -12,6 +13,14 @@ message UpsertProductsReq {
 }
 
 message UpsertProductsRsp {
+    repeated Product products = 1;
+}
+
+message ProductsReq {
+
+}
+
+message ProductsRsp {
     repeated Product products = 1;
 }
 
