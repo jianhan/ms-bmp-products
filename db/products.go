@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -127,6 +128,9 @@ func (f *products) GetAllProducts(ctx context.Context) (products []*pproducts.Pr
 }
 
 func validateProducts(products []*pproducts.Product) (err error) {
+	if len(products) == 0 {
+		return errors.New("empty products")
+	}
 	for _, v := range products {
 		conform.Strings(v)
 		// UUID checking

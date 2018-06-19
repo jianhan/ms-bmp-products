@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -127,6 +128,9 @@ func (d *categories) GetAllCategories(ctx context.Context) (categories []*pcateg
 }
 
 func validateCategories(categories []*pcategories.Category) (err error) {
+	if len(categories) == 0 {
+		return errors.New("empty categories")
+	}
 	for _, v := range categories {
 		conform.Strings(v)
 		// UUID checking
