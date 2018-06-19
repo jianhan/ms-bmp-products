@@ -74,12 +74,12 @@ func (d *categories) UpsertCategories(ctx context.Context, categories []*pcatego
 
 			if e.Url == s.Url && s.ID == "" {
 				// duplication for inserting, checking homepage url
-				return fmt.Errorf("error trying to insert new categories %v with duplicate homepage url %s", s, s.Url)
+				return fmt.Errorf("error trying to insert new categories %v with duplicate url %s", s, s.Url)
 			}
 
 			if s.ID != "" && s.ID != e.ID && e.Url == s.Url {
 				// duplication for updating, checking name
-				return fmt.Errorf("error trying to update categories %v with duplicate homepage url %s", s, s.Url)
+				return fmt.Errorf("error trying to update categories %v with duplicate url %s", s, s.Url)
 			}
 		}
 
