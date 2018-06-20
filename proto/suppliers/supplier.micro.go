@@ -11,6 +11,8 @@ It has these top-level messages:
 	UpsertSuppliersReq
 	UpsertSuppliersRsp
 	Supplier
+	SuppliersReq
+	SuppliersRsp
 */
 package suppliers
 
@@ -44,6 +46,7 @@ var _ server.Option
 
 type SuppliersServiceClient interface {
 	UpsertSuppliers(ctx context.Context, in *UpsertSuppliersReq, opts ...client.CallOption) (*UpsertSuppliersRsp, error)
+	Products(ctx context.Context, in *SuppliersReq, opts ...client.CallOption) (*SuppliersRsp, error)
 }
 
 type suppliersServiceClient struct {
@@ -74,10 +77,21 @@ func (c *suppliersServiceClient) UpsertSuppliers(ctx context.Context, in *Upsert
 	return out, nil
 }
 
+func (c *suppliersServiceClient) Products(ctx context.Context, in *SuppliersReq, opts ...client.CallOption) (*SuppliersRsp, error) {
+	req := c.c.NewRequest(c.serviceName, "SuppliersService.Products", in)
+	out := new(SuppliersRsp)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for SuppliersService service
 
 type SuppliersServiceHandler interface {
 	UpsertSuppliers(context.Context, *UpsertSuppliersReq, *UpsertSuppliersRsp) error
+	Products(context.Context, *SuppliersReq, *SuppliersRsp) error
 }
 
 func RegisterSuppliersServiceHandler(s server.Server, hdlr SuppliersServiceHandler, opts ...server.HandlerOption) {
@@ -90,4 +104,8 @@ type SuppliersService struct {
 
 func (h *SuppliersService) UpsertSuppliers(ctx context.Context, in *UpsertSuppliersReq, out *UpsertSuppliersRsp) error {
 	return h.SuppliersServiceHandler.UpsertSuppliers(ctx, in, out)
+}
+
+func (h *SuppliersService) Products(ctx context.Context, in *SuppliersReq, out *SuppliersRsp) error {
+	return h.SuppliersServiceHandler.Products(ctx, in, out)
 }

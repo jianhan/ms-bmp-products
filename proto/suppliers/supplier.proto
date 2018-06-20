@@ -5,6 +5,7 @@ option go_package="suppliers";
 
 service SuppliersService {
     rpc UpsertSuppliers (UpsertSuppliersReq) returns (UpsertSuppliersRsp);
+    rpc Products (SuppliersReq) returns (SuppliersRsp);
 }
 
 message UpsertSuppliersReq {
@@ -31,4 +32,12 @@ message Supplier {
     int64 display_order = 7;
     int64 created_at  = 8;
     int64 updated_at = 9;
+}
+
+message SuppliersReq {
+
+}
+
+message SuppliersRsp {
+    repeated Supplier suppliers = 1;
 }

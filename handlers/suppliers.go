@@ -46,3 +46,14 @@ func (h *Suppliers) UpsertSuppliers(ctx context.Context, req *psuppliers.UpsertS
 
 	return nil
 }
+
+func (h *Suppliers) Suppliers(ctx context.Context, req *psuppliers.SuppliersReq, rsp *psuppliers.SuppliersRsp) error {
+	// get all suppliers and construct response
+	suppliers, err := h.db.GetAllSuppliers(ctx)
+	if err != nil {
+		return err
+	}
+	rsp.Suppliers = suppliers
+
+	return nil
+}
