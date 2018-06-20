@@ -5,7 +5,7 @@ option go_package="suppliers";
 
 service SuppliersService {
     rpc UpsertSuppliers (UpsertSuppliersReq) returns (UpsertSuppliersRsp);
-    rpc Products (SuppliersReq) returns (SuppliersRsp);
+    rpc Suppliers (SuppliersReq) returns (SuppliersRsp);
 }
 
 message UpsertSuppliersReq {
