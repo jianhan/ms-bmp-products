@@ -81,6 +81,10 @@ func (d *categories) UpsertCategories(ctx context.Context, categories []*pcatego
 				// duplication for updating, checking name
 				return fmt.Errorf("error trying to update categories %v with duplicate url %s", s, s.Url)
 			}
+
+			if s.ID == e.ID {
+				s.CreatedAt = e.CreatedAt
+			}
 		}
 
 		// auto fill IDs and timestamp
