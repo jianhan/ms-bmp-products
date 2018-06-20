@@ -81,6 +81,11 @@ func (d *suppliers) UpsertSuppliers(ctx context.Context, suppliers []*psuppliers
 				// duplication for updating, checking name
 				return fmt.Errorf("error trying to update suppliers %v with duplicate homepage url %s", s, s.HomePageUrl)
 			}
+
+			if s.ID == e.ID {
+				s.CreatedAt = e.CreatedAt
+			}
+
 		}
 
 		// auto fill IDs and timestamp

@@ -82,6 +82,10 @@ func (d *products) UpsertProducts(ctx context.Context, products []*pproducts.Pro
 				// duplication for updating, checking name
 				return fmt.Errorf("error trying to update products %v with duplicate url %s", p, p.Url)
 			}
+
+			if p.ID == e.ID {
+				p.CreatedAt = e.CreatedAt
+			}
 		}
 
 		// auto fill IDs and timestamp
