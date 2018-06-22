@@ -46,12 +46,12 @@ func (h *Categories) UpsertCategories(ctx context.Context, req *pcategories.Upse
 }
 
 func (h *Categories) Categories(ctx context.Context, req *pcategories.CategoriesReq, rsp *pcategories.CategoriesRsp) error {
-	//// get all products and construct response
-	//categories, err := h.db.GetAllCategories(ctx)
-	//if err != nil {
-	//	return err
-	//}
-	//rsp.Categories = categories
+	// get all products and construct response
+	categories, err := h.db.Categories()
+	if err != nil {
+		return err
+	}
+	rsp.Categories = categories
 
 	return nil
 }

@@ -89,6 +89,14 @@ func (c *Categories) UpsertCategories(categories []*pcategories.Category) error 
 	return nil
 }
 
+func (c *Categories) Categories() (categories []*pcategories.Category, err error) {
+	var r []*pcategories.Category
+	if err = c.session.DB(c.db).C(c.collection).Find(nil).All(&r); err != nil {
+		return
+	}
+	return r, nil
+}
+
 //
 //func (c *Categories) InsertCategories(categories *pcategory.Categories) (int64, error) {
 //	bulk := c.session.DB(c.db).C(c.collection).Bulk()
