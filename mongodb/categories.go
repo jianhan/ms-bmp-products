@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"github.com/asaskevich/govalidator"
+	"github.com/golang/protobuf/ptypes"
 	"github.com/google/uuid"
 	"github.com/gosimple/slug"
 	"github.com/jianhan/ms-bmp-products/db"
@@ -67,26 +68,30 @@ func NewCategories(session *mgo.Session, collection string) db.Categories {
 	}
 }
 
-func (c *Categories) UpsertCategories(categories []*pcategories.Category) error {
+func (c *Categories) UpsertCategories(categories []*pcategories.Category) (int, int, error) {
+	bulk := c.session.DB(c.db).C(c.collection).Bulk()
 	for _, category := range categories {
 		conform.Strings(category)
 		category.Slug = slug.Make(category.Name)
+		category.UpdatedAt = ptypes.TimestampNow()
 		if category.ID == "" {
 			category.ID = uuid.New().String()
+			category.CreatedAt = ptypes.TimestampNow()
 		}
 		if _, err := govalidator.ValidateStruct(category); err != nil {
-			return err
+			return 0, 0, err
 		}
-		_, err := c.session.DB(c.db).C(c.collection).Upsert(
+		bulk.Upsert(
 			bson.M{"_id": category.ID},
 			bson.M{"$set": category},
 		)
-		if err != nil {
-			return err
-		}
+	}
+	r, err := bulk.Run()
+	if err != nil {
+		return 0, 0, err
 	}
 
-	return nil
+	return r.Matched, r.Modified, nil
 }
 
 func (c *Categories) Categories() (categories []*pcategories.Category, err error) {
@@ -97,7 +102,6 @@ func (c *Categories) Categories() (categories []*pcategories.Category, err error
 	return r, nil
 }
 
-//
 //func (c *Categories) InsertCategories(categories *pcategory.Categories) (int64, error) {
 //	bulk := c.session.DB(c.db).C(c.collection).Bulk()
 //	for _, v := range categories.Categories {

@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package go.micro.srv.products;
 option go_package="categories";
+import "google/protobuf/timestamp.proto";
 
 service CategoriesService {
     rpc UpsertCategories (UpsertCategoriesReq) returns (UpsertCategoriesRsp);
@@ -13,7 +14,9 @@ message UpsertCategoriesReq {
 }
 
 message UpsertCategoriesRsp {
-    repeated Category categories = 1;
+    int64 matched = 1;
+    int64 modified = 2;
+    repeated Category categories = 3;
 }
 
 message CategoriesReq {
@@ -25,16 +28,20 @@ message CategoriesRsp {
 }
 
 message Category {
-    // @inject_tag: valid:"uuidv4~Category ID must be a valid UUIDv4" conform:"trim"
+    // @inject_tag: bson:"_id" valid:"uuidv4~Category ID must be a valid UUIDv4" conform:"trim"
     string ID = 1;
-    // @inject_tag: valid:"required~Category name is required" conform:"trim"
+    // @inject_tag: bson:"name" valid:"required~Category name is required" conform:"trim"
     string name = 2;
-    // @inject_tag: valid:"required~Category slug is required" conform:"trim,slug"
+    // @inject_tag: bson:"slug" valid:"required~Category slug is required" conform:"trim,slug"
     string slug = 3;
-    // @inject_tag: valid:"required~Category url is required, url~Category url must be a valid URL" conform:"trim"
+    // @inject_tag: bson:"url" valid:"required~Category url is required, url~Category url must be a valid URL" conform:"trim"
     string url = 4;
+    // @inject_tag: bson:"display_order"
     int64 display_order = 5;
+    // @inject_tag: bson:"hidden"
     bool hidden = 6;
-    int64 created_at  = 7;
-    int64 updated_at = 8;
+    // @inject_tag: bson:"created_at"
+    google.protobuf.Timestamp created_at  = 7;
+    // @inject_tag: bson:"updated_at"
+    google.protobuf.Timestamp updated_at = 8;
 }
