@@ -21,8 +21,8 @@ func NewCategoriesHandler(db db.Categories, stanConn stan.Conn) *Categories {
 	return &Categories{db: db, stanConn: stanConn}
 }
 
-func (h *Categories) UpsertCategories(ctx context.Context, req *pcategories.UpsertCategoriesReq, rsp *pcategories.UpsertCategoriesRsp) error {
-	if err := h.db.UpsertCategories(req.Categories); err != nil {
+func (h *Categories) UpsertCategories(ctx context.Context, req *pcategories.UpsertCategoriesReq, rsp *pcategories.UpsertCategoriesRsp) (err error) {
+	if rsp.Matched, rsp.Modified, err = h.db.UpsertCategories(req.Categories); err != nil {
 		return err
 	}
 

@@ -45,13 +45,6 @@ func NewCategories(session *mgo.Session, collection string) db.Categories {
 	if err := c.EnsureIndex(urlIndex); err != nil {
 		panic(err)
 	}
-	idIndex := mgo.Index{
-		Key:    []string{"id"},
-		Unique: true,
-	}
-	if err := c.EnsureIndex(idIndex); err != nil {
-		panic(err)
-	}
 	textIndex := mgo.Index{
 		Key: []string{"$text:name"},
 	}
@@ -68,15 +61,17 @@ func NewCategories(session *mgo.Session, collection string) db.Categories {
 	}
 }
 
-func (c *Categories) UpsertCategories(categories []*pcategories.Category) (int, int, error) {
+func (c *Categories) UpsertCategories(categories []*pcategories.Category) (int64, int64, error) {
 	bulk := c.session.DB(c.db).C(c.collection).Bulk()
 	for _, category := range categories {
 		conform.Strings(category)
 		category.Slug = slug.Make(category.Name)
 		category.UpdatedAt = ptypes.TimestampNow()
+		if category.CreatedAt == nil {
+			category.CreatedAt = ptypes.TimestampNow()
+		}
 		if category.ID == "" {
 			category.ID = uuid.New().String()
-			category.CreatedAt = ptypes.TimestampNow()
 		}
 		if _, err := govalidator.ValidateStruct(category); err != nil {
 			return 0, 0, err
@@ -91,7 +86,7 @@ func (c *Categories) UpsertCategories(categories []*pcategories.Category) (int, 
 		return 0, 0, err
 	}
 
-	return r.Matched, r.Modified, nil
+	return int64(r.Matched), int64(r.Modified), nil
 }
 
 func (c *Categories) Categories() (categories []*pcategories.Category, err error) {

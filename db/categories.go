@@ -5,6 +5,6 @@ import (
 )
 
 type Categories interface {
-	UpsertCategories(categories []*pcategories.Category) (int, int, error)
+	UpsertCategories(categories []*pcategories.Category) (int64, int64, error)
 	Categories() (categories []*pcategories.Category, err error)
 }
