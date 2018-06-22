@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 
-	"github.com/gogo/protobuf/proto"
 	"github.com/jianhan/ms-bmp-products/db"
 	pcategories "github.com/jianhan/ms-bmp-products/proto/categories"
 	"github.com/nats-io/go-nats-streaming"
@@ -23,36 +22,36 @@ func NewCategoriesHandler(db db.Categories, stanConn stan.Conn) *Categories {
 }
 
 func (h *Categories) UpsertCategories(ctx context.Context, req *pcategories.UpsertCategoriesReq, rsp *pcategories.UpsertCategoriesRsp) error {
-	if err := h.db.UpsertCategories(ctx, req.Categories); err != nil {
+	if err := h.db.UpsertCategories(req.Categories); err != nil {
 		return err
 	}
 
-	// get all products and construct response
-	categories, err := h.db.GetAllCategories(ctx)
-	if err != nil {
-		return err
-	}
-	rsp.Categories = categories
-
-	// publish message
-	rspBytes, err := proto.Marshal(rsp)
-	if err != nil {
-		return err
-	}
-	if err := h.stanConn.Publish(TopicCategoriesUpserted, rspBytes); err != nil {
-		return err
-	}
+	//// get all products and construct response
+	//categories, err := h.db.GetAllCategories(ctx)
+	//if err != nil {
+	//	return err
+	//}
+	//rsp.Categories = categories
+	//
+	//// publish message
+	//rspBytes, err := proto.Marshal(rsp)
+	//if err != nil {
+	//	return err
+	//}
+	//if err := h.stanConn.Publish(TopicCategoriesUpserted, rspBytes); err != nil {
+	//	return err
+	//}
 
 	return nil
 }
 
 func (h *Categories) Categories(ctx context.Context, req *pcategories.CategoriesReq, rsp *pcategories.CategoriesRsp) error {
-	// get all products and construct response
-	categories, err := h.db.GetAllCategories(ctx)
-	if err != nil {
-		return err
-	}
-	rsp.Categories = categories
+	//// get all products and construct response
+	//categories, err := h.db.GetAllCategories(ctx)
+	//if err != nil {
+	//	return err
+	//}
+	//rsp.Categories = categories
 
 	return nil
 }
