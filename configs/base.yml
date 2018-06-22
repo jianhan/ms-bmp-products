@@ -1,8 +1,11 @@
 service:
   name: go.micro.srv.products
-  register_ttl: 30
+  register_ttl: 1200000
   register_interval: 10
   version: 1.0.0
   metadata:
     description: Simple products management micro service
 enable_debug: true
+mongodb:
+  host: localhost
+  db: bmp

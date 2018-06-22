@@ -147,6 +147,7 @@ func validateProducts(products []*pproducts.Product) (err error) {
 		}
 		_, err := govalidator.ValidateStruct(v)
 		if err != nil {
+			logrus.WithField("product", v).Error(err.Error())
 			return err
 		}
 	}
