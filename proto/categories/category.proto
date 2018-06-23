@@ -40,8 +40,10 @@ message Category {
     int64 display_order = 5;
     // @inject_tag: bson:"hidden"
     bool hidden = 6;
+    // @inject_tag: bson:"supplier_id" conform:"trim"
+    string supplier_id = 7;
     // @inject_tag: bson:"created_at"
-    google.protobuf.Timestamp created_at  = 7;
+    google.protobuf.Timestamp created_at  = 8;
     // @inject_tag: bson:"updated_at"
-    google.protobuf.Timestamp updated_at = 8;
+    google.protobuf.Timestamp updated_at = 9;
 }

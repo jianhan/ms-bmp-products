@@ -51,9 +51,11 @@ func main() {
 	defer session.Close()
 
 	// register suppliers handler
+	suppliersDB := mongodb.NewSuppliers(session, "suppliers")
+	categoriesDB := mongodb.NewCategories(session, "categories")
 	psuppliers.RegisterSuppliersServiceHandler(
 		srv.Server(),
-		handlers.NewSuppliersHandler(mongodb.NewSuppliers(session, "suppliers"), sc),
+		handlers.NewSuppliersHandler(suppliersDB, sc),
 	)
 
 	//// register products handler
@@ -66,7 +68,7 @@ func main() {
 
 	pcategories.RegisterCategoriesServiceHandler(
 		srv.Server(),
-		handlers.NewCategoriesHandler(mongodb.NewCategories(session, "categories"), sc),
+		handlers.NewCategoriesHandler(suppliersDB, categoriesDB, sc),
 	)
 
 	if err := srv.Run(); err != nil {

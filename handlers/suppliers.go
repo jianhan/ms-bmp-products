@@ -11,7 +11,6 @@ import (
 )
 
 const (
-	TopicSuppliersUpserted            = "suppliers:upserted"
 	TopicSyncSuppliersToElasticSearch = "suppliers:sync-to-elastic-search"
 )
 
@@ -30,17 +29,15 @@ func (h *Suppliers) UpsertSuppliers(ctx context.Context, req *psuppliers.UpsertS
 		return
 	}
 
-	// if sync required, publish message
-	if req.SyncElasticSearch {
-		if rsp.Suppliers, err = h.db.Suppliers(); err != nil {
-			return
-		}
-		rspBytes, rErr := proto.Marshal(rsp)
-		if rErr != nil {
-			return rErr
-		}
-		h.stanConn.Publish(TopicSyncSuppliersToElasticSearch, rspBytes)
+	// sync required, publish message
+	if rsp.Suppliers, err = h.db.Suppliers(); err != nil {
+		return
 	}
+	rspBytes, rErr := proto.Marshal(rsp)
+	if rErr != nil {
+		return rErr
+	}
+	h.stanConn.Publish(TopicSyncSuppliersToElasticSearch, rspBytes)
 
 	return
 }

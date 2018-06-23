@@ -1,10 +1,13 @@
 package mongodb
 
 import (
+	"strings"
+
 	"github.com/asaskevich/govalidator"
 	"github.com/gosimple/slug"
 	"github.com/jianhan/ms-bmp-products/db"
 	pcategories "github.com/jianhan/ms-bmp-products/proto/categories"
+	psuppliers "github.com/jianhan/ms-bmp-products/proto/suppliers"
 	"github.com/leebenson/conform"
 	"github.com/spf13/viper"
 	"gopkg.in/mgo.v2"
@@ -59,7 +62,7 @@ func NewCategories(session *mgo.Session, collection string) db.Categories {
 	}
 }
 
-func (c *Categories) UpsertCategories(categories []*pcategories.Category) (int64, int64, error) {
+func (c *Categories) UpsertCategories(suppliers []*psuppliers.Supplier, categories []*pcategories.Category) (int64, int64, error) {
 	bulk := c.session.DB(c.db).C(c.collection).Bulk()
 	for _, category := range categories {
 		conform.Strings(category)
@@ -67,6 +70,13 @@ func (c *Categories) UpsertCategories(categories []*pcategories.Category) (int64
 		category.Slug = slug.Make(category.Name)
 		if _, err := govalidator.ValidateStruct(category); err != nil {
 			return 0, 0, err
+		}
+		// assign supplier ID
+		for _, supplier := range suppliers {
+			if strings.Contains(category.Url, supplier.HomePageUrl) {
+				category.SupplierId = supplier.ID
+				break
+			}
 		}
 		bulk.Upsert(
 			bson.M{"_id": category.ID},
