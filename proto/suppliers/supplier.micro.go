@@ -19,6 +19,7 @@ package suppliers
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
+import _ "github.com/golang/protobuf/ptypes/timestamp"
 
 import (
 	client "github.com/micro/go-micro/client"
