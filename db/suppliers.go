@@ -5,6 +5,6 @@ import (
 )
 
 type Suppliers interface {
-	UpsertSuppliers(suppliers []*psuppliers.Supplier) error
+	UpsertSuppliers(suppliers []*psuppliers.Supplier) (int64, int64, error)
 	Suppliers() (suppliers []*psuppliers.Supplier, err error)
 }
