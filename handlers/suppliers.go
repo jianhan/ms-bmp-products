@@ -29,6 +29,8 @@ func (h *Suppliers) UpsertSuppliers(ctx context.Context, req *psuppliers.UpsertS
 	if rsp.Matched, rsp.Modified, err = h.db.UpsertSuppliers(req.Suppliers); err != nil {
 		return
 	}
+
+	// if sync required, publish message
 	if req.SyncElasticSearch {
 		if rsp.Suppliers, err = h.db.Suppliers(); err != nil {
 			return
@@ -40,7 +42,7 @@ func (h *Suppliers) UpsertSuppliers(ctx context.Context, req *psuppliers.UpsertS
 		h.stanConn.Publish(TopicSyncSuppliersToElasticSearch, rspBytes)
 	}
 
-	return nil
+	return
 }
 
 func (h *Suppliers) Suppliers(ctx context.Context, req *psuppliers.SuppliersReq, rsp *psuppliers.SuppliersRsp) (err error) {
