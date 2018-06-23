@@ -35,9 +35,9 @@ func (h *Suppliers) UpsertSuppliers(ctx context.Context, req *psuppliers.UpsertS
 		if rsp.Suppliers, err = h.db.Suppliers(); err != nil {
 			return
 		}
-		rspBytes, err := proto.Marshal(rsp)
-		if err != nil {
-			return
+		rspBytes, rErr := proto.Marshal(rsp)
+		if rErr != nil {
+			return rErr
 		}
 		h.stanConn.Publish(TopicSyncSuppliersToElasticSearch, rspBytes)
 	}
