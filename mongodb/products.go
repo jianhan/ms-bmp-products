@@ -67,9 +67,6 @@ func (p *Products) UpsertProducts(categories []*pcategories.Category, products [
 		conform.Strings(product)
 		p.beforeUpsert(product)
 		product.Slug = slug.Make(product.Name)
-		if _, err := govalidator.ValidateStruct(product); err != nil {
-			return 0, 0, err
-		}
 
 		// assign category ID
 		for _, category := range categories {
@@ -77,6 +74,14 @@ func (p *Products) UpsertProducts(categories []*pcategories.Category, products [
 				product.CategoryId = category.ID
 				break
 			}
+		}
+
+		// check category ID, if empty then continue
+		if product.CategoryId == "" {
+			continue
+		}
+		if _, err := govalidator.ValidateStruct(product); err != nil {
+			return 0, 0, err
 		}
 		bulk.Upsert(
 			bson.M{"_id": product.ID},

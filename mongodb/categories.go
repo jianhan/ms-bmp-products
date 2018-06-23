@@ -68,9 +68,6 @@ func (c *Categories) UpsertCategories(suppliers []*psuppliers.Supplier, categori
 		conform.Strings(category)
 		c.beforeUpsert(category)
 		category.Slug = slug.Make(category.Name)
-		if _, err := govalidator.ValidateStruct(category); err != nil {
-			return 0, 0, err
-		}
 		// assign supplier ID
 		for _, supplier := range suppliers {
 			if strings.Contains(category.Url, supplier.HomePageUrl) {
@@ -78,6 +75,12 @@ func (c *Categories) UpsertCategories(suppliers []*psuppliers.Supplier, categori
 				break
 			}
 		}
+
+		// validation
+		if _, err := govalidator.ValidateStruct(category); err != nil {
+			return 0, 0, err
+		}
+
 		bulk.Upsert(
 			bson.M{"_id": category.ID},
 			bson.M{"$set": category},
