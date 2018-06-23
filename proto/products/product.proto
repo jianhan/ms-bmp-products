@@ -51,7 +51,7 @@ message Product {
     // @inject_tag: bson:"hidden"
     bool hidden = 11;
     // @inject_tag: bson:"category_id"
-    bool category_id = 12;
+    string category_id = 12;
     // @inject_tag: bson:"created_at"
     google.protobuf.Timestamp created_at  = 13;
     // @inject_tag: bson:"updated_at"
