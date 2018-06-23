@@ -50,7 +50,7 @@ message Product {
     string brand = 10;
     // @inject_tag: bson:"hidden"
     bool hidden = 11;
-    // @inject_tag: bson:"category_id"
+    // @inject_tag: bson:"category_id" valid:"required~Category ID is required for product"
     string category_id = 12;
     // @inject_tag: bson:"created_at"
     google.protobuf.Timestamp created_at  = 13;

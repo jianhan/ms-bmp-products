@@ -32,13 +32,6 @@ func NewCategories(session *mgo.Session, collection string) db.Categories {
 	if err := c.EnsureIndex(displayOrderIndex); err != nil {
 		panic(err)
 	}
-	slugIndex := mgo.Index{
-		Key:    []string{"slug"},
-		Unique: true,
-	}
-	if err := c.EnsureIndex(slugIndex); err != nil {
-		panic(err)
-	}
 	urlIndex := mgo.Index{
 		Key:    []string{"url"},
 		Unique: true,

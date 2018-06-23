@@ -25,13 +25,6 @@ func NewProducts(session *mgo.Session, collection string) db.Products {
 	if err := c.EnsureIndex(nameIndex); err != nil {
 		panic(err)
 	}
-	slugIndex := mgo.Index{
-		Key:    []string{"slug"},
-		Unique: true,
-	}
-	if err := c.EnsureIndex(slugIndex); err != nil {
-		panic(err)
-	}
 	priceIndex := mgo.Index{
 		Key: []string{"price"},
 	}
@@ -67,7 +60,6 @@ func (p *Products) UpsertProducts(categories []*pcategories.Category, products [
 		conform.Strings(product)
 		p.beforeUpsert(product)
 		product.Slug = slug.Make(product.Name)
-
 		// assign category ID
 		for _, category := range categories {
 			if category.Url == product.CategoryUrl {

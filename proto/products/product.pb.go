@@ -127,8 +127,8 @@ type Product struct {
 	Brand string `protobuf:"bytes,10,opt,name=brand" json:"brand,omitempty" bson:"brand" conform:"trim"`
 	// @inject_tag: bson:"hidden"
 	Hidden bool `protobuf:"varint,11,opt,name=hidden" json:"hidden,omitempty" bson:"hidden"`
-	// @inject_tag: bson:"category_id"
-	CategoryId string `protobuf:"bytes,12,opt,name=category_id,json=categoryId" json:"category_id,omitempty" bson:"category_id"`
+	// @inject_tag: bson:"category_id" valid:"required~Category ID is required for product"
+	CategoryId string `protobuf:"bytes,12,opt,name=category_id,json=categoryId" json:"category_id,omitempty" bson:"category_id" valid:"required~Category ID is required for product"`
 	// @inject_tag: bson:"created_at"
 	CreatedAt *google_protobuf.Timestamp `protobuf:"bytes,13,opt,name=created_at,json=createdAt" json:"created_at,omitempty" bson:"created_at"`
 	// @inject_tag: bson:"updated_at"

@@ -35,11 +35,9 @@ func (h *Products) UpsertProducts(ctx context.Context, req *pproducts.UpsertProd
 	}
 
 	// get all products and construct response
-	products, err := h.db.Products()
-	if err != nil {
-		return err
+	if rsp.Products, err = h.db.Products(); err != nil {
+		return
 	}
-	rsp.Products = products
 
 	// publish message
 	rspBytes, err := proto.Marshal(rsp)
