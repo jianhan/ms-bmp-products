@@ -14,16 +14,23 @@ const (
 )
 
 type Products struct {
-	db       db.Products
-	stanConn stan.Conn
+	categoriesDB db.Categories
+	db           db.Products
+	stanConn     stan.Conn
 }
 
-func NewProductsHandler(db db.Products, stanConn stan.Conn) *Products {
-	return &Products{db: db, stanConn: stanConn}
+func NewProductsHandler(categoriesDB db.Categories, db db.Products, stanConn stan.Conn) *Products {
+	return &Products{categoriesDB: categoriesDB, db: db, stanConn: stanConn}
 }
 
 func (h *Products) UpsertProducts(ctx context.Context, req *pproducts.UpsertProductsReq, rsp *pproducts.UpsertProductsRsp) (err error) {
-	if rsp.Matched, rsp.Modified, err = h.db.UpsertProducts(req.Products); err != nil {
+	//	get all categories
+	categories, cErr := h.categoriesDB.Categories()
+	if cErr != nil {
+		return cErr
+	}
+
+	if rsp.Matched, rsp.Modified, err = h.db.UpsertProducts(categories, req.Products); err != nil {
 		return err
 	}
 

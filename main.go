@@ -8,6 +8,7 @@ import (
 	"github.com/jianhan/ms-bmp-products/handlers"
 	"github.com/jianhan/ms-bmp-products/mongodb"
 	pcategories "github.com/jianhan/ms-bmp-products/proto/categories"
+	pproducts "github.com/jianhan/ms-bmp-products/proto/products"
 	psuppliers "github.com/jianhan/ms-bmp-products/proto/suppliers"
 	cfgreader "github.com/jianhan/pkg/configs"
 	"github.com/micro/go-micro"
@@ -50,22 +51,23 @@ func main() {
 	}
 	defer session.Close()
 
-	// register suppliers handler
 	suppliersDB := mongodb.NewSuppliers(session, "suppliers")
 	categoriesDB := mongodb.NewCategories(session, "categories")
+	productsDB := mongodb.NewProducts(session, "products")
+
+	// register suppliers handler
 	psuppliers.RegisterSuppliersServiceHandler(
 		srv.Server(),
 		handlers.NewSuppliersHandler(suppliersDB, sc),
 	)
 
-	//// register products handler
-	//pproducts.RegisterProductsServiceHandler(
-	//	srv.Server(),
-	//	handlers.NewProductsHandler(db.NewProducts("products", firestoreClient), sc),
-	//)
+	// register products handler
+	pproducts.RegisterProductsServiceHandler(
+		srv.Server(),
+		handlers.NewProductsHandler(categoriesDB, productsDB, sc),
+	)
 
 	// register categories handler
-
 	pcategories.RegisterCategoriesServiceHandler(
 		srv.Server(),
 		handlers.NewCategoriesHandler(suppliersDB, categoriesDB, sc),

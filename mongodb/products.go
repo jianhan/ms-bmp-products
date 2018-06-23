@@ -4,6 +4,7 @@ import (
 	"github.com/asaskevich/govalidator"
 	"github.com/gosimple/slug"
 	"github.com/jianhan/ms-bmp-products/db"
+	pcategories "github.com/jianhan/ms-bmp-products/proto/categories"
 	pproducts "github.com/jianhan/ms-bmp-products/proto/products"
 	"github.com/leebenson/conform"
 	"github.com/spf13/viper"
@@ -60,7 +61,7 @@ func NewProducts(session *mgo.Session, collection string) db.Products {
 	}
 }
 
-func (p *Products) UpsertProducts(products []*pproducts.Product) (int64, int64, error) {
+func (p *Products) UpsertProducts(categories []*pcategories.Category, products []*pproducts.Product) (int64, int64, error) {
 	bulk := p.session.DB(p.db).C(p.collection).Bulk()
 	for _, product := range products {
 		conform.Strings(product)
@@ -68,6 +69,14 @@ func (p *Products) UpsertProducts(products []*pproducts.Product) (int64, int64, 
 		product.Slug = slug.Make(product.Name)
 		if _, err := govalidator.ValidateStruct(product); err != nil {
 			return 0, 0, err
+		}
+
+		// assign category ID
+		for _, category := range categories {
+			if category.Url == product.CategoryUrl {
+				product.CategoryId = category.ID
+				break
+			}
 		}
 		bulk.Upsert(
 			bson.M{"_id": product.ID},
