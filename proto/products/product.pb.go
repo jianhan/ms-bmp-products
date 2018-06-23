@@ -99,16 +99,16 @@ type Product struct {
 	Price float32 `protobuf:"fixed32,4,opt,name=price" json:"price,omitempty" bson:"price" valid:"required~Product price is required"`
 	// @inject_tag: bson:"currency" valid:"required~Product currency is required"
 	Currency string `protobuf:"bytes,5,opt,name=currency" json:"currency,omitempty" bson:"currency" valid:"required~Product currency is required"`
-	// @inject_tag: bson:"image_url" valid:"url~Product image must be a valid URL format"
-	ImageUrl string `protobuf:"bytes,6,opt,name=image_url,json=imageUrl" json:"image_url,omitempty" bson:"image_url" valid:"url~Product image must be a valid URL format"`
-	// @inject_tag: bson:"category_url" valid:"required~Product categories url is required,url~Product category url must be a valid URL format"
-	CategoryUrl string `protobuf:"bytes,7,opt,name=category_url,json=categoryUrl" json:"category_url,omitempty" bson:"category_url" valid:"required~Product categories url is required,url~Product category url must be a valid URL format"`
-	// @inject_tag: bson:"url" valid:"required~Product url is required,url~Product url must be a valid URL format"
-	Url string `protobuf:"bytes,8,opt,name=url" json:"url,omitempty" bson:"url" valid:"required~Product url is required,url~Product url must be a valid URL format"`
+	// @inject_tag: bson:"image_url" valid:"url~Product image must be a valid URL format" conform:"trim"
+	ImageUrl string `protobuf:"bytes,6,opt,name=image_url,json=imageUrl" json:"image_url,omitempty" bson:"image_url" valid:"url~Product image must be a valid URL format" conform:"trim"`
+	// @inject_tag: bson:"category_url" valid:"required~Product categories url is required,url~Product category url must be a valid URL format" conform:"trim"
+	CategoryUrl string `protobuf:"bytes,7,opt,name=category_url,json=categoryUrl" json:"category_url,omitempty" bson:"category_url" valid:"required~Product categories url is required,url~Product category url must be a valid URL format" conform:"trim"`
+	// @inject_tag: bson:"url" valid:"required~Product url is required,url~Product url must be a valid URL format" conform:"trim"
+	Url string `protobuf:"bytes,8,opt,name=url" json:"url,omitempty" bson:"url" valid:"required~Product url is required,url~Product url must be a valid URL format" conform:"trim"`
 	// @inject_tag: bson:"rating"
 	Rating float32 `protobuf:"fixed32,9,opt,name=rating" json:"rating,omitempty" bson:"rating"`
-	// @inject_tag: bson:"brand"
-	Brand string `protobuf:"bytes,10,opt,name=brand" json:"brand,omitempty" bson:"brand"`
+	// @inject_tag: bson:"brand" conform:"trim"
+	Brand string `protobuf:"bytes,10,opt,name=brand" json:"brand,omitempty" bson:"brand" conform:"trim"`
 	// @inject_tag: bson:"hidden"
 	Hidden bool `protobuf:"varint,11,opt,name=hidden" json:"hidden,omitempty" bson:"hidden"`
 	// @inject_tag: bson:"created_at"

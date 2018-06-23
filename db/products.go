@@ -5,6 +5,6 @@ import (
 )
 
 type Products interface {
-	UpsertProducts(products []*pproducts.Product) error
+	UpsertProducts(products []*pproducts.Product) (int64, int64, error)
 	Products() (products []*pproducts.Product, err error)
 }
