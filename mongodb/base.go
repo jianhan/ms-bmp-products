@@ -6,6 +6,7 @@ import (
 
 	"strings"
 
+	"github.com/golang/protobuf/ptypes"
 	"github.com/google/uuid"
 	"gopkg.in/mgo.v2"
 )
@@ -54,10 +55,18 @@ func (b *base) beforeUpsert(v interface{}) error {
 		vfld := val.Field(i)
 
 		// automatically assign UUID if it is empty
-		if kind == reflect.String && vfld.CanSet() && sfld.Name == "ID" {
-			if strings.Trim(vfld.String(), " ") == "" {
-				vfld.SetString(uuid.New().String())
-			}
+		if kind == reflect.String && vfld.CanSet() && sfld.Name == "ID" && strings.Trim(vfld.String(), " ") == "" {
+			vfld.SetString(uuid.New().String())
+		}
+
+		// automatically assign updated at
+		if kind == reflect.Ptr && vfld.CanSet() && sfld.Name == "UpdatedAt" {
+			vfld.Set(reflect.ValueOf(ptypes.TimestampNow()))
+		}
+
+		// automatically assign created at
+		if kind == reflect.Ptr && vfld.CanSet() && sfld.Name == "CreatedAt" && vfld.IsNil() {
+			vfld.Set(reflect.ValueOf(ptypes.TimestampNow()))
 		}
 
 	}
