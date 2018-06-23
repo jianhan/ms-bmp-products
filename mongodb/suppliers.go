@@ -2,8 +2,6 @@ package mongodb
 
 import (
 	"github.com/asaskevich/govalidator"
-	"github.com/golang/protobuf/ptypes"
-	"github.com/google/uuid"
 	"github.com/gosimple/slug"
 	"github.com/jianhan/ms-bmp-products/db"
 	psuppliers "github.com/jianhan/ms-bmp-products/proto/suppliers"
@@ -68,13 +66,6 @@ func (s *Suppliers) UpsertSuppliers(suppliers []*psuppliers.Supplier) (int64, in
 	for _, supplier := range suppliers {
 		conform.Strings(supplier)
 		supplier.Slug = slug.Make(supplier.Name)
-		supplier.UpdatedAt = ptypes.TimestampNow()
-		if supplier.CreatedAt == nil {
-			supplier.CreatedAt = ptypes.TimestampNow()
-		}
-		if supplier.ID == "" {
-			supplier.ID = uuid.New().String()
-		}
 		if _, err := govalidator.ValidateStruct(supplier); err != nil {
 			return 0, 0, err
 		}

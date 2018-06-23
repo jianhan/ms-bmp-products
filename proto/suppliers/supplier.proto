@@ -14,7 +14,9 @@ message UpsertSuppliersReq {
 }
 
 message UpsertSuppliersRsp {
-    repeated Supplier suppliers = 1;
+    int64 matched = 1;
+    int64 modified = 2;
+    repeated Supplier suppliers = 3;
 }
 
 message Supplier {

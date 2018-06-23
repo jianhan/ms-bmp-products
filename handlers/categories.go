@@ -23,35 +23,17 @@ func NewCategoriesHandler(db db.Categories, stanConn stan.Conn) *Categories {
 
 func (h *Categories) UpsertCategories(ctx context.Context, req *pcategories.UpsertCategoriesReq, rsp *pcategories.UpsertCategoriesRsp) (err error) {
 	if rsp.Matched, rsp.Modified, err = h.db.UpsertCategories(req.Categories); err != nil {
-		return err
+		return
 	}
 
-	//// get all products and construct response
-	//categories, err := h.db.GetAllCategories(ctx)
-	//if err != nil {
-	//	return err
-	//}
-	//rsp.Categories = categories
-	//
-	//// publish message
-	//rspBytes, err := proto.Marshal(rsp)
-	//if err != nil {
-	//	return err
-	//}
-	//if err := h.stanConn.Publish(TopicCategoriesUpserted, rspBytes); err != nil {
-	//	return err
-	//}
-
-	return nil
+	return
 }
 
-func (h *Categories) Categories(ctx context.Context, req *pcategories.CategoriesReq, rsp *pcategories.CategoriesRsp) error {
+func (h *Categories) Categories(ctx context.Context, req *pcategories.CategoriesReq, rsp *pcategories.CategoriesRsp) (err error) {
 	// get all products and construct response
-	categories, err := h.db.Categories()
-	if err != nil {
-		return err
+	if rsp.Categories, err = h.db.Categories(); err != nil {
+		return
 	}
-	rsp.Categories = categories
 
 	return nil
 }
