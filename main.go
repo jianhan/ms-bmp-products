@@ -5,10 +5,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/jianhan/ms-bmp-products/handlers"
 	"github.com/jianhan/ms-bmp-products/mongodb"
 	pcategories "github.com/jianhan/ms-bmp-products/proto/categories"
+	psuppliers "github.com/jianhan/ms-bmp-products/proto/suppliers"
 	cfgreader "github.com/jianhan/pkg/configs"
 	"github.com/micro/go-micro"
 	"github.com/nats-io/go-nats-streaming"
@@ -42,19 +42,20 @@ func main() {
 	// TODO: Added dynamic configs so do not have to rebuild service when configs changed
 	// init service
 	srv.Init()
-	spew.Dump(viper.Get("mongodb.host"))
+
+	// get mongodb db
 	session, err := mgo.Dial(viper.GetString("mongodb.host"))
 	if err != nil {
 		panic(err)
 	}
 	defer session.Close()
 
-	//// register suppliers handler
-	//psuppliers.RegisterSuppliersServiceHandler(
-	//	srv.Server(),
-	//	handlers.NewSuppliersHandler(db.NewSuppliers("suppliers", firestoreClient), sc),
-	//)
-	//
+	// register suppliers handler
+	psuppliers.RegisterSuppliersServiceHandler(
+		srv.Server(),
+		handlers.NewSuppliersHandler(mongodb.NewSuppliers(session, "suppliers"), sc),
+	)
+
 	//// register products handler
 	//pproducts.RegisterProductsServiceHandler(
 	//	srv.Server(),
@@ -62,6 +63,7 @@ func main() {
 	//)
 
 	// register categories handler
+
 	pcategories.RegisterCategoriesServiceHandler(
 		srv.Server(),
 		handlers.NewCategoriesHandler(mongodb.NewCategories(session, "categories"), sc),

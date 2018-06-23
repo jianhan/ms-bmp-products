@@ -65,6 +65,7 @@ func (s *Suppliers) UpsertSuppliers(suppliers []*psuppliers.Supplier) (int64, in
 	bulk := s.session.DB(s.db).C(s.collection).Bulk()
 	for _, supplier := range suppliers {
 		conform.Strings(supplier)
+		s.beforeUpsert(supplier)
 		supplier.Slug = slug.Make(supplier.Name)
 		if _, err := govalidator.ValidateStruct(supplier); err != nil {
 			return 0, 0, err

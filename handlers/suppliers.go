@@ -1,16 +1,18 @@
 package handlers
 
 import (
-	"context"
-
 	"github.com/jianhan/ms-bmp-products/db"
 	"github.com/nats-io/go-nats-streaming"
 
+	"context"
+
+	"github.com/gogo/protobuf/proto"
 	psuppliers "github.com/jianhan/ms-bmp-products/proto/suppliers"
 )
 
 const (
-	TopicSuppliersUpserted = "suppliers:upserted"
+	TopicSuppliersUpserted            = "suppliers:upserted"
+	TopicSyncSuppliersToElasticSearch = "suppliers:sync-to-elastic-search"
 )
 
 type Suppliers struct {
@@ -22,10 +24,20 @@ func NewSuppliersHandler(db db.Suppliers, stanConn stan.Conn) *Suppliers {
 	return &Suppliers{db: db, stanConn: stanConn}
 }
 
-func (h *Suppliers) UpsertSuppliers(req *psuppliers.UpsertSuppliersReq, rsp *psuppliers.UpsertSuppliersRsp) (err error) {
+func (h *Suppliers) UpsertSuppliers(ctx context.Context, req *psuppliers.UpsertSuppliersReq, rsp *psuppliers.UpsertSuppliersRsp) (err error) {
 	// bulk upserts
 	if rsp.Matched, rsp.Modified, err = h.db.UpsertSuppliers(req.Suppliers); err != nil {
 		return
+	}
+	if req.SyncElasticSearch {
+		if rsp.Suppliers, err = h.db.Suppliers(); err != nil {
+			return
+		}
+		rspBytes, err := proto.Marshal(rsp)
+		if err != nil {
+			return
+		}
+		h.stanConn.Publish(TopicSyncSuppliersToElasticSearch, rspBytes)
 	}
 
 	return nil

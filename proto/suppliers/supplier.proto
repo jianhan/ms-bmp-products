@@ -11,6 +11,7 @@ service SuppliersService {
 
 message UpsertSuppliersReq {
     repeated Supplier suppliers = 1;
+    bool sync_elastic_search = 2;
 }
 
 message UpsertSuppliersRsp {
