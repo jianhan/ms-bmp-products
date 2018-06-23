@@ -3,7 +3,6 @@ package mongodb
 import (
 	"github.com/asaskevich/govalidator"
 	"github.com/golang/protobuf/ptypes"
-	"github.com/google/uuid"
 	"github.com/gosimple/slug"
 	"github.com/jianhan/ms-bmp-products/db"
 	pcategories "github.com/jianhan/ms-bmp-products/proto/categories"
@@ -65,13 +64,11 @@ func (c *Categories) UpsertCategories(categories []*pcategories.Category) (int64
 	bulk := c.session.DB(c.db).C(c.collection).Bulk()
 	for _, category := range categories {
 		conform.Strings(category)
+		c.beforeUpsert(category)
 		category.Slug = slug.Make(category.Name)
 		category.UpdatedAt = ptypes.TimestampNow()
 		if category.CreatedAt == nil {
 			category.CreatedAt = ptypes.TimestampNow()
-		}
-		if category.ID == "" {
-			category.ID = uuid.New().String()
 		}
 		if _, err := govalidator.ValidateStruct(category); err != nil {
 			return 0, 0, err
