@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package go.micro.srv.products;
 option go_package="products";
+import "google/protobuf/timestamp.proto";
 
 service ProductsService {
     rpc UpsertProducts (UpsertProductsReq) returns (UpsertProductsRsp);
@@ -25,25 +26,30 @@ message ProductsRsp {
 }
 
 message Product {
-    // @inject_tag: valid:"uuidv4~Product ID must be a valid UUIDv4" conform:"trim"
+    // @inject_tag: bson:"_id" valid:"uuidv4~Product ID must be a valid UUIDv4" conform:"trim"
     string ID = 1;
-    // @inject_tag: valid:"required~Product name is required" conform:"trim"
+    // @inject_tag: bson:"name" valid:"required~Product name is required" conform:"trim"
     string name = 2;
-    // @inject_tag: valid:"required~Product slug is required" conform:"trim,slug"
+    // @inject_tag: bson:"slug" valid:"required~Product slug is required" conform:"trim,slug"
     string slug = 3;
-    // @inject_tag: valid:"required~Product price is required"
+    // @inject_tag: bson:"price" valid:"required~Product price is required"
     float price = 4;
-    // @inject_tag: valid:"required~Product currency is required"
+    // @inject_tag: bson:"currency" valid:"required~Product currency is required"
     string currency = 5;
-    // @inject_tag: valid:"url~Product image must be a valid URL format"
+    // @inject_tag: bson:"image_url" valid:"url~Product image must be a valid URL format"
     string image_url = 6;
-    // @inject_tag: valid:"required~Product categories url is required,url~Product category url must be a valid URL format"
+    // @inject_tag: bson:"category_url" valid:"required~Product categories url is required,url~Product category url must be a valid URL format"
     string category_url = 7;
-    // @inject_tag: valid:"required~Product url is required,url~Product url must be a valid URL format"
+    // @inject_tag: bson:"url" valid:"required~Product url is required,url~Product url must be a valid URL format"
     string url = 8;
+    // @inject_tag: bson:"rating"
     float rating = 9;
+    // @inject_tag: bson:"brand"
     string brand = 10;
+    // @inject_tag: bson:"hidden"
     bool hidden = 11;
-    int64 created_at  = 12;
-    int64 updated_at = 13;
+    // @inject_tag: bson:"created_at"
+    google.protobuf.Timestamp created_at  = 12;
+    // @inject_tag: bson:"updated_at"
+    google.protobuf.Timestamp  updated_at = 13;
 }
