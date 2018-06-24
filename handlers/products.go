@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 
-	"github.com/gogo/protobuf/proto"
 	"github.com/jianhan/ms-bmp-products/db"
 	pproducts "github.com/jianhan/ms-bmp-products/proto/products"
 	"github.com/nats-io/go-nats-streaming"
@@ -34,17 +33,8 @@ func (h *Products) UpsertProducts(ctx context.Context, req *pproducts.UpsertProd
 		return err
 	}
 
-	// get all products and construct response
-	if rsp.Products, err = h.db.Products(); err != nil {
-		return
-	}
-
-	// publish message
-	rspBytes, err := proto.Marshal(rsp)
-	if err != nil {
-		return err
-	}
-	if err := h.stanConn.Publish(TopicSyncProductsToElasticSearch, rspBytes); err != nil {
+	// publish event
+	if err := h.stanConn.Publish(TopicSyncProductsToElasticSearch, nil); err != nil {
 		return err
 	}
 
